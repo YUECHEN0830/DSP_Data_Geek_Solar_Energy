@@ -16,7 +16,7 @@
   
   
 ## Basic Git Commands That You Might Need
-- `git clone <remote_URL>`                      --> To create local copy of an existing remote repository, here you could do this 'git clone https://github.com/kevingyk6854/STDS_Data_Geeks_Agriculture.git'
+- `git clone <remote_URL>`                      --> To create local copy of an existing remote repository, here you could do this 'git clone https://github.com/YUECHEN0830/DSP_Data_Geek_Solar_Energy.git'
 - `git pull`                                    --> To get the latest version of a repository  
 - `git status`                                  --> To check the current state of the local repository compared with remote one  
 - `git add <file or directory name>`            --> To add a specific file or folder (including files) to the staging area for git  
