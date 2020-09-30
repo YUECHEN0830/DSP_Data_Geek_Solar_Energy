@@ -1,4 +1,4 @@
-# STDS_Data_Geeks_Agriculture
+# DSP_Data_Geek_Solar_Energy
 
 ## Repository Structure 
 
