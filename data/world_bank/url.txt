@@ -1,0 +1,1 @@
+https://databank.worldbank.org/reports.aspx?source=2&series=EG.ELC.PROD.KH,EG.ELC.COAL.ZS,EG.ELC.NGAS.ZS,EG.ELC.PETR.ZS,EG.ELC.HYRO.ZS,EG.ELC.RNWX.ZS,EG.ELC.NUCL.ZS,EG.ELC.ACCS.ZS#
