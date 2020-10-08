@@ -1,0 +1,40 @@
+---
+title: "Solcast API"
+author: "Rato Li"
+date: "07/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Solcast World API
+
+https://api.solcast.com.au/world_radiation/estimated_actuals?latitude=-33.86882&longitude=151.209295&hours=168&format=json
+```{r}
+library(httr)
+library(jsonlite)
+
+result <- GET("https://api.solcast.com.au/world_radiation/estimated_actuals"
+              , query = list(
+                api_key="???"
+                ,latitude=-33.86882
+                ,longitude=151.209295
+                ,hours=168
+                ,format="json")
+              , write_disk(tf <- tempfile(fileext = ".json"))
+)
+
+result
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

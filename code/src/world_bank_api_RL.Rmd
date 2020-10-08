@@ -1,0 +1,67 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+[The World Bank](https://data.worldbank.org/indicator/EG.ELC.FOSL.ZS?locations=AU)
+
+Energy use (kg of oil equivalent per capita) - Australia
+
+http://api.worldbank.org/v2/en/indicator/EG.USE.PCAP.KG.OE?downloadformat=csv
+
+```{r}
+library(httr)
+library(jsonlite)
+
+result <- GET("http://api.worldbank.org/v2/en/indicator/EG.USE.PCAP.KG.OE"
+              , query = list(downloadformat="csv")
+              , write_disk(tf <- tempfile(fileext = ".zip"))
+)
+
+result
+
+```
+Electricity production from renewable sources, excluding hydroelectric (kWh) - Australia
+
+http://api.worldbank.org/v2/en/indicator/EG.ELC.RNWX.KH?downloadformat=csv
+```{r}
+library(httr)
+library(jsonlite)
+
+result <- GET("http://api.worldbank.org/v2/en/indicator/EG.ELC.RNWX.KH"
+              , query = list(downloadformat="csv")
+              , write_disk(tf <- tempfile(fileext = ".zip"))
+)
+
+result
+
+```
+
+Electricity production from oil, gas and coal sources (% of total) - Australia
+http://api.worldbank.org/v2/en/indicator/EG.ELC.FOSL.ZS?downloadformat=csv
+```{r}
+library(httr)
+library(jsonlite)
+
+result <- GET("http://api.worldbank.org/v2/en/indicator/EG.ELC.FOSL.ZS"
+              , query = list(downloadformat="csv")
+              , write_disk(tf <- tempfile(fileext = ".zip"))
+)
+
+result
+
+```
+Electricity production from oil sources (% of total) - Australia
+http://api.worldbank.org/v2/en/indicator/EG.ELC.PETR.ZS?downloadformat=csv
+```{r}
+library(httr)
+library(jsonlite)
+
+result <- GET("http://api.worldbank.org/v2/en/indicator/EG.ELC.PETR.ZS"
+              , query = list(downloadformat="csv")
+              , write_disk(tf <- tempfile(fileext = ".zip"))
+)
+
+result
+
+```
