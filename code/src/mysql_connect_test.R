@@ -16,4 +16,4 @@ dbListTables(mysqlconnection)
 result <- dbSendQuery(mysqlconnection, "select * from t1")
 datasets <- fetch(result)
 
-
+dbDisconnect(mysqlconnection)
