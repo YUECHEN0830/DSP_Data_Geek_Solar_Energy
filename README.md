@@ -38,14 +38,14 @@ this is shorthand for:
 - `git checkout <branch_name>`                  --> To switch branch
 - `git branch -d <branch_name>`                 --> To delete branch
 
-Merge:
-- `git merge –-no-ff <branch_name>`             --> To merge <branch_name> (this) to your current branch
-Undo a merge:
-- `git reset --hard <commit-before-merge>`      --> <commit-before-merge> == the hash of commit
-or
-- `git reset --hard HEAD~1`
-Undo a pushed merge:
-- `git revert -m 1 <merge-commit-hash>`         --> <commit-before-merge> == the hash of commit
+Merge:  
+- `git merge –-no-ff <branch_name>`             --> To merge <branch_name> (this) to your current branch  
+Undo a merge:  
+- `git reset --hard <commit-before-merge>`      --> <commit-before-merge> == the hash of commit  
+or  
+- `git reset --hard HEAD~1`  
+Undo a pushed merge:  
+- `git revert -m 1 <merge-commit-hash>`         --> <commit-before-merge> == the hash of commit  
 
 Note: If you need any other extra help related to git, you could check these websites:  
 > https://git-scm.com/docs  
