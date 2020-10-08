@@ -28,9 +28,9 @@
 - `git push`                                    --> To send local commits to the remote   repository (Note: please make sure not submit files that would make the whole project breakdown !!!)
 
 ## Git Commands Related to Branch Management
-Basic branching:
-- `git checkout -b <branch_name>`               --> To create a new branch and switch to it at the same time
-this is shorthand for:
+Basic branching:  
+- `git checkout -b <branch_name>`               --> To create a new branch and switch to it at the same time  
+this is shorthand for:  
 - `git branch <new_branch_name>`                --> To create a new branch
 - `git checkout <new_branch_name>`              --> To switch to the new branch
 
@@ -55,6 +55,9 @@ Note: If you need any other extra help related to git, you could check these web
 > https://stackoverflow.com/questions/11722533/rollback-a-git-merge/29110174
 > https://git-scm.com/docs/git-merge
 > https://segmentfault.com/q/1010000000140446 (Chinese)
+
+2. If you want to create a new branch or modify an old one, please check doc/Branches We Have.md first !!! 
+
 
 ## How to upload large file (>100MB) to Github
 1. download and install LFS  
