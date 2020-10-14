@@ -17,7 +17,7 @@ Rato's Suggestions
 Cecilia's Suggestion
 --------------------
 3) How latitude/climate influence solar radiation in Australia?
-   based on solar station location/climate data compare with monthly solar exposure
+   based on solar station location (lon,lat) and climate data merge with monthly mean solar exposure
    
 Ashley's Suggestions
 --------------------
