@@ -50,24 +50,25 @@ CREATE TABLE dim_aus_state (
 	,dim_created_date datetime DEFAULT CURRENT_TIMESTAMP
 	,dim_updated_date datetime DEFAULT CURRENT_TIMESTAMP
 	,`state` varchar(100)
+	,`short_code` varchar(10)
 	,CONSTRAINT dim_aus_state_pk PRIMARY KEY (dim_aus_state_key)
 )
 ;
-insert into dim_aus_state (`state`) values ('Northern Territory')
+insert into dim_aus_state (`state`, `short_code`) values ('Northern Territory', 'NT')
 ;
-insert into dim_aus_state (`state`) values ('Queensland')
+insert into dim_aus_state (`state`, `short_code`) values ('Queensland', 'QLD')
 ;
-insert into dim_aus_state (`state`) values ('Victoria')
+insert into dim_aus_state (`state`, `short_code`) values ('Victoria', 'VIC')
 ;
-insert into dim_aus_state (`state`) values ('New South Wales')
+insert into dim_aus_state (`state`, `short_code`) values ('New South Wales', 'NSW')
 ;
-insert into dim_aus_state (`state`) values ('ACT')
+insert into dim_aus_state (`state`, `short_code`) values ('Australian Capital Territory', 'ACT')
 ;
-insert into dim_aus_state (`state`) values ('Tasmania')
+insert into dim_aus_state (`state`, `short_code`) values ('Tasmania', 'TAS')
 ;
-insert into dim_aus_state (`state`) values ('South Australia')
+insert into dim_aus_state (`state`, `short_code`) values ('South Australia', 'SA')
 ;
-insert into dim_aus_state (`state`) values ('Western Australia')
+insert into dim_aus_state (`state`, `short_code`) values ('Western Australia', 'WA')
 ;
 /*
   dim_climate_zone
