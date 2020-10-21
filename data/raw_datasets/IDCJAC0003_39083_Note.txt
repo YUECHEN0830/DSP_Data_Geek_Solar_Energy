@@ -2,19 +2,19 @@ Australian Government
 Bureau of Meteorology
 
 Notes for Monthly Mean Daily Global Solar Exposure Climate Data
-Product code: IDCJAC0003 reference: 67417824
+Product code: IDCJAC0003 reference: 67417857
 ________________________________________________________________________________________
 
 ** Station Details **
 
-Bureau of Meteorology station number: 3003
-Station name: BROOME AIRPORT
+Bureau of Meteorology station number: 39083
+Station name: ROCKHAMPTON AERO
 Year site opened: 1939
 Year site closed: 
-Latitude (decimal degrees, south negative): -17.95
-Longitude (decimal degrees, east positive): 122.24
-Height of station above mean sea level (metres): 7
-State: WA
+Latitude (decimal degrees, south negative): -23.38
+Longitude (decimal degrees, east positive): 150.48
+Height of station above mean sea level (metres): 10
+State: QLD
 First year of data supplied in data file: 1990
 Last year of data supplied in data file: 2020
 
@@ -122,7 +122,7 @@ http://www.bom.gov.au/climate/how/contacts.shtml
 
 _________________________________________
 
-Created on Wed 21 Oct 2020 18:15:52 PM AEDT from Climate Data Online, Bureau of Meteorology.
+Created on Wed 21 Oct 2020 18:16:12 PM AEDT from Climate Data Online, Bureau of Meteorology.
 http://www.bom.gov.au/climate/data
 
 Further information on this product: http://www.bom.gov.au/climate/austmaps/solar-radiation-glossary.shtml
