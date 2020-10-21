@@ -1,0 +1,63 @@
+Hi Team,
+
+Please add in your suggestions on research questions so that we can decide on the final question for the project.
+
+Rato's Suggestions
+------------------
+1) Maximization on saving on electricity bill (domestic) / pay-off period
+  Solar energy Panel Generation - energy (MJ) by month, postcode / suburb / region
+  Normal electricity consumption
+  Government installation subsidy (one-off)
+  Feed-in tariff
+  
+2) Is it possible to pay $0 in electricity bill?
+  Batteries installation cost
+  Energy stored in battery - Amount of energy generated from solar minus amount consummed by day
+
+Cecilia's Suggestion
+--------------------
+3) How latitude/climate influence solar radiation in Australia?
+   based on solar station location (lon,lat) and climate data merge with monthly mean solar exposure
+   
+Ashley's Suggestions
+--------------------
+4) How much solar panels do I need to run my house entirely?
+
+Consumption: need to know what is the unit consumption or average unit consumption in Australia by analyzing the last maybe 3/6 months of the electricity bill, so estimate the system's requirement. (Or we can analysis based on our own figure)
+Location: solar productions is depending on the geographic location. Maximun capacity and peak daylight hours.
+Panel orientation: solar panels angled in the most optimal manner (north-facing) for ensuring peak production on most days.
+Quality of solar panel: high/medium/low efficiency panels
+
+
+Yukai's Suggestions
+--------------------
+How solar energy could save your money? - mainly focus on some cities (e.g Sydney or Brisbane)
+two steps:
+1. calculate bill reduction
+	- PV costs across different size of and number of panels
+	- PV avg daily output, compared with avg daily eletricity consumption & bill
+	- add on rebate and feed-in tariff policy for solar system installation
+-> calculate avg bill reduction
+
+2. calculate generation in some cities (e.g Sydney or Brisbane)
+	- mean solar radiation
+	- conversion rate (converting solar radiation to solar energy)
+-> calculate generation (daily, monthly or yearly)
+
+final goal:
+To reveal the potential of applying solar energy in the city and increase attractiveness to consumers and gonvernment
+
+stakeholders:
+- installers
+- solar panel providers / retailers
+- government
+- environment
+
+
+Marco's Suggestion
+--------------------
+
+6a) How many kWh per standard PV module (residential panel 65’’ by 39’’ and commercial panel 78’’ by 39’’) could have been generated at BOM stations at ideal conditions (angled tilt)? 
+6b) How many kWh could have been produced by all modules installed in NSW and all were at those ideal conditions?
+6c) How many kWh were actually produced?
+6d) How much sustainable energy could be generated additionally if the density of solar panel users would be increase by e.g. 10%, 20% or 50%?
