@@ -56,3 +56,21 @@ IGNORE 1 ROWS;
 ;
 select * from `stg_electricity_consumption_benchmarks`
 ;
+LOAD DATA LOCAL INFILE 'N:/Data_Work/20200802 94692 Data Science Practices/AT2/DSP_Data_Geek_Solar_Energy/data/Bureau of Meteorology/IDCJAC0016_072150_1800_Data.csv' 
+INTO TABLE stg_IDCJAC0016_072150_1800_Data 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+;
+select * from `stg_IDCJAC0016_072150_1800_Data`
+;
+LOAD DATA LOCAL INFILE 'N:/Data_Work/20200802 94692 Data Science Practices/AT2/DSP_Data_Geek_Solar_Energy/data/Bureau of Meteorology/IDCJMC0014 - AUS Stations Measuring Sunshine Hours.csv' 
+INTO TABLE stg_Weather_Stations 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+;
+select * from stg_Weather_Stations
+;
