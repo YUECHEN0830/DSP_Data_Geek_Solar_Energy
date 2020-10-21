@@ -3,11 +3,19 @@ Use dsp_test
 /*
   dim_weather_station
 */
+-- DROP TABLE IF EXISTS dim_weather_station
 CREATE TABLE dim_weather_station (
 	dim_weather_station_key int(11) NOT NULL AUTO_INCREMENT
 	,dim_created_date datetime DEFAULT CURRENT_TIMESTAMP
 	,dim_updated_date datetime DEFAULT CURRENT_TIMESTAMP
 	,`station_number` varchar(10)
+	,station_name varchar(100)
+	,latitude decimal(10,4)
+	,longitude decimal(10,4)
+	,start_year int
+	,start_month int
+	,end_year int
+	,end_month int
 	,CONSTRAINT dim_weather_station_pk PRIMARY KEY (dim_weather_station_key)
 )
 ;
