@@ -5,7 +5,8 @@ library(knitr)
 source(here("code/common", "mysql_connection.R"))
 
 # get data
-db_connection <- db_connect(username = 'admin', password = 'password', dbname = 'dsp_db', host = 'mysql-instance1.ce9zfotawf0r.us-east-2.rds.amazonaws.com')
+# db_connection <- db_connect(username = 'admin', password = 'password', dbname = 'dsp_db', host = 'mysql-instance1.ce9zfotawf0r.us-east-2.rds.amazonaws.com')
+db_connection <- db_connect(username = 'root', password = 'password', dbname = 'DSP_AT2', host = 'localhost')
 
 df_installation <- db_query(db_connection, query_sql = "select * from ANNUAL_SOLAR_PV_INSTALLATIONS")
 colnames(df_installation)[1] <- "year"
@@ -21,7 +22,7 @@ df_write <- inner_join(df_installation_2, dim_aus_state, by = c("state_short_cod
 head(df_write)
 
 # insert data
-db_write(db_connection, table_name = "fct_sys_installation", dataset = df_write)
+db_write(db_connection, table_name = "fct_annual_sys_installation", dataset = df_write)
 db_disconnect(db_connection)
 
 
