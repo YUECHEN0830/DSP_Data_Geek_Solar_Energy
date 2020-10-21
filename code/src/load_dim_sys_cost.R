@@ -34,8 +34,8 @@ df_staging <- fetch(stg_rows)
 # curr_dim <- dbReadTable(conn_staging,"dim_sys_cost")
 
 # Wrangling of dataframe into the right form to store in SQL
-df_staging$dim_created_date <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-df_staging$dim_updated_date <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
+# df_staging$dim_created_date <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
+# df_staging$dim_updated_date <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
 
 # Save Records into DIM table
 # dbExecute(conn_dwh,"start transaction;")
