@@ -1,0 +1,78 @@
+---
+title: "DSP AT2 - Scenario 1"
+output: html_notebook
+---
+
+Dashboard for scenario #1
+ * Scenario
+ * - state: NSW
+ * - Climate Zone: 4
+ * - household size: 4
+ * - swimming pool: N
+ * 
+ * Output
+ * - spring_kWh
+ * - summer_kWh
+ * - autumn_kWh
+ * - winter_kWh
+
+```{r}
+library(readr)
+library(here)
+library(reshape2)
+library(knitr)
+source(here("code/common", "mysql_connection.R"))
+
+dwh_user <- Sys.getenv("dwh_username")
+dwh_passwd <- Sys.getenv("dwh_password")
+dwh_dbname <- 'dsp_test'
+dwh_host <- 'tutorial-db-instance.ce9zfotawf0r.us-east-2.rds.amazonaws.com'
+
+sql_elec_consumption_daily <- 'SELECT
+	das.state
+	,das.short_code 
+	,dcz.climate_zone 
+	,dhs.household_size 
+	,f.fct_created_date
+	,f.swimming_pool_ind
+	,f.spring_kWh 
+	,f.summer_kWh 
+	,f.autumn_kWh 
+	,f.winter_kWh 
+FROM fct_household_electricity_consumption_benchmark as f
+left join dim_aus_state as das on das.dim_aus_state_key = f.dim_aus_state_key
+left join dim_climate_zone as dcz on dcz.dim_climate_zone_key = f.dim_climate_zone_key
+left join dim_household_size as dhs on dhs.dim_household_size_key = f.dim_household_size_key 
+where 1=1
+and das.short_code = "NSW" 
+and dcz.climate_zone = "Climate Zone 4"
+and dhs.household_size = "4 Person Household"
+and f.swimming_pool_ind = "N"
+;
+'
+
+# get data
+db_connection <- db_connect(username = dwh_user, password = dwh_passwd, dbname = dwh_dbname, host = dwh_host)
+
+df_daily_consumption <- db_query(db_connection, query_sql = sql_elec_consumption_daily)
+
+# colnames(df_capacity)[1] <- "year"
+# 
+# dim_aus_state <- db_query(db_connection, query_sql = "select * from dim_aus_state;")
+# 
+# # process data
+# df_capacity_2 <- melt(df_capacity, id.vars=c("year"), variable.name="state_short_code", value.name="mw_installed")
+# 
+# df_write <- inner_join(df_capacity_2, dim_aus_state, by = c("state_short_code" = "short_code")) %>%
+#   select("dim_aus_state_key", "year", "mw_installed") %>%
+#   arrange(year, dim_aus_state_key)
+# head(df_write)
+# 
+# # insert data
+# db_write(db_connection, table_name = "fct_annual_installed_capacity", dataset = df_write)
+# db_disconnect(db_connection)
+
+
+```
+
+Here we can do some plotting to showcase what we find in the data.
