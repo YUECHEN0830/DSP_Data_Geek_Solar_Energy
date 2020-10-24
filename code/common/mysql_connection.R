@@ -1,23 +1,7 @@
 library(RMySQL)
 
 # Get database connection
-db_connect <- function(username = 'tutorial_user', 
-                          password = 'password',
-                          port = 3306,
-                          dbname = 'dsp_test',
-                          host = 'tutorial-db-instance.ce9zfotawf0r.us-east-2.rds.amazonaws.com') {
-    
-  mysqlconnection <- dbConnect(RMySQL::MySQL(),
-                               user = username,
-                               password = password,
-                               port = port,
-                               dbname = dbname,
-                               host = host)
-
-  return (mysqlconnection)
-}
-
-db_connect_from_config <- function(db_config) {
+db_connect <- function(db_config) {
   
   mysqlconnection <- dbConnect(RMySQL::MySQL(),
                                user = db_config$username,

@@ -6,7 +6,7 @@ CREATE TABLE fct_solar_pv_sys_output (
 	,fct_updated_date datetime DEFAULT CURRENT_TIMESTAMP
 	,dim_aus_state_key int(11)
 	,city text
-	,size double
+	,dim_solar_sys_cost_key int(11) -- size & price range
 	,avg_daily_output double
 	,CONSTRAINT fct_solar_pv_sys_output_pk PRIMARY KEY (fct_solar_pv_sys_output_key)
 )

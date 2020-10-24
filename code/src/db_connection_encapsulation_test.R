@@ -53,9 +53,9 @@ library(dplyr)
 
 # using configuration file
 config <- read.csv(here("code/config", "db_connection_config.csv"))
-myconfig <- config %>% filter(user_key == "yukai_root")
+myconfig <- config %>% filter(user_key == "rato_rds")
 
-db_connection <- db_connect_from_config(myconfig)
+db_connection <- db_connect(myconfig)
 
 df <- db_query(db_connection, query_sql = "select * from dim_aus_state")
 head(df, 2)
