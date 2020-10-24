@@ -24,7 +24,7 @@ q_ausgr_201819 <- dbSendQuery(conn_staging, "SELECT * FROM stg_ausgrid_average_2
 ausgr_201819 <- fetch(q_ausgr_201819)
 
 
-## Wrangle Staging to Dim and Fact tabel 
+## Wrangle Staging to Dim and Fact Tabel 
 
 
 
@@ -48,8 +48,8 @@ conn_dwh <- dbConnect(RMySQL::MySQL(),
                       host = 'tutorial-db-instance.ce9zfotawf0r.us-east-2.rds.amazonaws.com')
 
 # Import Tables to DWH
-dbWriteTable(conn_dwh,"stg_ausgrid_average_201718", stg_ausgrid_average_201718, append=TRUE, row.names=FALSE)
-dbWriteTable(conn_dwh,"stg_ausgrid_average_201819", stg_ausgrid_average_201819, append=TRUE, row.names=FALSE)
+dbWriteTable(conn_dwh,"stg_ausgrid_average_201718", ausgr_201718, append=TRUE, row.names=FALSE)
+dbWriteTable(conn_dwh,"stg_ausgrid_average_201819", ausgr_201819, append=TRUE, row.names=FALSE)
 
 ## disconnect mysql server
 dbDisconnect(conn_dwh)
