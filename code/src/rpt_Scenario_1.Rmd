@@ -1,6 +1,8 @@
 ---
 title: "DSP AT2 - Scenario 1"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 Dashboard for scenario #1
@@ -177,7 +179,7 @@ db_disconnect(db_connection)
 ```
 
 Here we can do some plotting to showcase what we find in the data.
-```{r plots}
+```{r ann-install}
 library(ggplot2)
 
 df_annual_installations %>%
@@ -185,7 +187,7 @@ df_annual_installations %>%
   geom_point(mapping=aes(line_type = state))
 ```
 
-```{r plots}
+```{r l-ann-install}
 library(ggplot2)
 
 df_annual_installations %>%
