@@ -26,6 +26,8 @@
 - `git rm -f <file_name>`                       --> To delete a file  
 - `git reset <file or directory name>`                    --> To remove a file from the staging area
 - `git push`                                    --> To send local commits to the remote   repository (Note: please make sure not submit files that would make the whole project breakdown !!!)
+- `git log`                                     --> To show the commit logs (e.g. commit 41972ebd3041447fe43877573XXXXXXXXXXXX)
+- `git reset --hard <commit version>`           --> To revert to a specific version (need use `git push -f -u origin <branch name>` to push codes back to Github)
 
 ## Git Commands Related to Branch Management
 Basic branching:  

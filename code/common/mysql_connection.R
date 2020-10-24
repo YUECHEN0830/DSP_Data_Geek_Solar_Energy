@@ -17,6 +17,18 @@ db_connect <- function(username = 'tutorial_user',
   return (mysqlconnection)
 }
 
+db_connect_from_config <- function(db_config) {
+  
+  mysqlconnection <- dbConnect(RMySQL::MySQL(),
+                               user = db_config$username,
+                               password = db_config$password,
+                               port = db_config$port,
+                               dbname = db_config$dbname,
+                               host = db_config$host)
+  
+  return (mysqlconnection)
+}
+
 # Disconnect database
 db_disconnect <- function(db_connection) {
   dbDisconnect(db_connection)

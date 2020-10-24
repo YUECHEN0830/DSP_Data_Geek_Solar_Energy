@@ -49,9 +49,18 @@ db_write(db_connection, table_name = "fct_solar_pv_sys_output", dataset = df_out
 db_disconnect(db_connection)
 
 # -------------------------------------------------------------------------------------
+library(dplyr)
 
+# using configuration file
+config <- read.csv(here("code/config", "db_connection_config.csv"))
+myconfig <- config %>% filter(user_key == "yukai_root")
 
+db_connection <- db_connect_from_config(myconfig)
 
+df <- db_query(db_connection, query_sql = "select * from dim_aus_state")
+head(df, 2)
+
+db_disconnect(db_connection)
 
 
 
