@@ -1,0 +1,276 @@
+State,Climate Zone,Swimming Pool?,Household Size,Autumn kWh,Summer kWh,Winter kWh,Spring kWh
+Northern Territory,Climate Zone 1,N/A,1 Person Household,1124,1049,969,977
+Northern Territory,Climate Zone 1,N/A,2 Person Household,2280,2476,1854,2081
+Northern Territory,Climate Zone 1,N/A,3 Person Household,2517,2568,2072,2486
+Northern Territory,Climate Zone 1,N/A,4 Person Household,2516,2718,2204,2636
+Northern Territory,Climate Zone 1,N/A,5+ Person Household,2826,2977,2416,2802
+Queensland,Climate Zone 1,N/A,1 Person Household,967,1063,842,906
+Queensland,Climate Zone 1,N/A,2 Person Household,1671,1857,1349,1525
+Queensland,Climate Zone 1,N/A,3 Person Household,1906,2147,1543,1723
+Queensland,Climate Zone 1,N/A,4 Person Household,1938,2312,1704,1927
+Queensland,Climate Zone 1,N/A,5+ Person Household,1938,2312,1704,1927
+Queensland,Climate Zone 2,N,1 Person Household,765,817,786,747
+Queensland,Climate Zone 2,N,2 Person Household,1156,1262,1124,1068
+Queensland,Climate Zone 2,N,3 Person Household,1329,1462,1361,1266
+Queensland,Climate Zone 2,N,4 Person Household,1683,1868,1583,1538
+Queensland,Climate Zone 2,N,5+ Person Household,2019,2228,2008,1895
+Queensland,Climate Zone 2,Y,1 Person Household,1443,1608,1367,1332
+Queensland,Climate Zone 2,Y,2 Person Household,1833,2053,1705,1653
+Queensland,Climate Zone 2,Y,3 Person Household,2006,2253,1943,1851
+Queensland,Climate Zone 2,Y,4 Person Household,2361,2659,2165,2123
+Queensland,Climate Zone 2,Y,5+ Person Household,2697,3019,2589,2480
+Queensland,Climate Zone 3,N/A,1 Person Household,1086,1325,1030,1019
+Queensland,Climate Zone 3,N/A,2 Person Household,1790,2120,1537,1638
+Queensland,Climate Zone 3,N/A,3 Person Household,2059,2617,1704,1935
+Queensland,Climate Zone 3,N/A,4 Person Household,2090,2782,1865,2139
+Queensland,Climate Zone 3,N/A,5+ Person Household,2090,2782,1865,2139
+Queensland,Climate Zone 5,N,1 Person Household,736,793,922,769
+Queensland,Climate Zone 5,N,2 Person Household,1143,1205,1188,1074
+Queensland,Climate Zone 5,N,3 Person Household,1216,1194,1290,1163
+Queensland,Climate Zone 5,N,4 Person Household,1365,1380,1750,1361
+Queensland,Climate Zone 5,N,5+ Person Household,1586,1585,2021,1564
+Queensland,Climate Zone 5,Y,1 Person Household,1592,1778,1812,1554
+Queensland,Climate Zone 5,Y,2 Person Household,2000,2190,2078,1859
+Queensland,Climate Zone 5,Y,3 Person Household,2073,2179,2180,1948
+Queensland,Climate Zone 5,Y,4 Person Household,2222,2365,2641,2146
+Queensland,Climate Zone 5,Y,5+ Person Household,2443,2569,2911,2348
+New South Wales,Climate Zone 2,N,1 Person Household,868,825,908,815
+New South Wales,Climate Zone 2,N,2 Person Household,1028,1028,1096,1004
+New South Wales,Climate Zone 2,N,3 Person Household,1201,1229,1333,1202
+New South Wales,Climate Zone 2,N,4 Person Household,1513,1396,1761,1521
+New South Wales,Climate Zone 2,N,5+ Person Household,1849,1757,2186,1877
+New South Wales,Climate Zone 2,Y,1 Person Household,1545,1616,1490,1400
+New South Wales,Climate Zone 2,Y,2 Person Household,1706,1819,1677,1589
+New South Wales,Climate Zone 2,Y,3 Person Household,1879,2020,1914,1787
+New South Wales,Climate Zone 2,Y,4 Person Household,2190,2187,2343,2106
+New South Wales,Climate Zone 2,Y,5+ Person Household,2526,2548,2767,2462
+New South Wales,Climate Zone 4,N,1 Person Household,1562,1310,2203,1852
+New South Wales,Climate Zone 4,N,2 Person Household,1966,1753,2695,2083
+New South Wales,Climate Zone 4,N,3 Person Household,1966,1753,2695,2083
+New South Wales,Climate Zone 4,N,4 Person Household,2226,2113,2745,2412
+New South Wales,Climate Zone 4,N,5+ Person Household,3318,2852,4605,3827
+New South Wales,Climate Zone 4,Y,1 Person Household,935,983,1003,1027
+New South Wales,Climate Zone 4,Y,2 Person Household,1339,1425,1495,1258
+New South Wales,Climate Zone 4,Y,3 Person Household,1339,1425,1495,1258
+New South Wales,Climate Zone 4,Y,4 Person Household,1599,1785,1545,1587
+New South Wales,Climate Zone 4,Y,5+ Person Household,2691,2524,3405,3003
+New South Wales,Climate Zone 5,N,1 Person Household,798,790,1011,789
+New South Wales,Climate Zone 5,N,2 Person Household,1195,1280,1520,1146
+New South Wales,Climate Zone 5,N,3 Person Household,1268,1270,1622,1236
+New South Wales,Climate Zone 5,N,4 Person Household,1574,1580,1959,1519
+New South Wales,Climate Zone 5,N,5+ Person Household,1795,1785,2229,1721
+New South Wales,Climate Zone 5,Y,1 Person Household,1655,1775,1901,1574
+New South Wales,Climate Zone 5,Y,2 Person Household,2052,2265,2410,1931
+New South Wales,Climate Zone 5,Y,3 Person Household,2125,2254,2512,2021
+New South Wales,Climate Zone 5,Y,4 Person Household,2431,2565,2849,2304
+New South Wales,Climate Zone 5,Y,5+ Person Household,2652,2770,3120,2506
+New South Wales,Climate Zone 6,N,1 Person Household,959,927,1168,943
+New South Wales,Climate Zone 6,N,2 Person Household,1229,1364,1550,1260
+New South Wales,Climate Zone 6,N,3 Person Household,1332,1432,1573,1336
+New South Wales,Climate Zone 6,N,4 Person Household,1642,1794,2078,1670
+New South Wales,Climate Zone 6,N,5+ Person Household,1642,1794,2078,1670
+New South Wales,Climate Zone 6,Y,1 Person Household,1933,2117,2198,1826
+New South Wales,Climate Zone 6,Y,2 Person Household,2203,2554,2580,2144
+New South Wales,Climate Zone 6,Y,3 Person Household,2305,2622,2603,2219
+New South Wales,Climate Zone 6,Y,4 Person Household,2615,2984,3108,2554
+New South Wales,Climate Zone 6,Y,5+ Person Household,2615,2984,3108,2554
+New South Wales,Climate Zone 7,N,1 Person Household,1003,734,1051,784
+New South Wales,Climate Zone 7,N,2 Person Household,1480,1285,1966,1596
+New South Wales,Climate Zone 7,N,3 Person Household,1573,1312,1993,1584
+New South Wales,Climate Zone 7,N,4 Person Household,1573,1312,1993,1584
+New South Wales,Climate Zone 7,N,5+ Person Household,2114,1800,2742,2179
+New South Wales,Climate Zone 7,Y,1 Person Household,2087,1182,3445,2200
+New South Wales,Climate Zone 7,Y,2 Person Household,2563,1733,4361,3012
+New South Wales,Climate Zone 7,Y,3 Person Household,2656,1760,4388,2999
+New South Wales,Climate Zone 7,Y,4 Person Household,2656,1760,4388,2999
+New South Wales,Climate Zone 7,Y,5+ Person Household,3197,2248,5136,3594
+New South Wales,Climate Zone 8,N,1 Person Household,1003,734,1051,784
+New South Wales,Climate Zone 8,N,2 Person Household,1480,1285,1966,1596
+New South Wales,Climate Zone 8,N,3 Person Household,1573,1312,1993,1584
+New South Wales,Climate Zone 8,N,4 Person Household,1573,1312,1993,1584
+New South Wales,Climate Zone 8,N,5+ Person Household,2114,1800,2742,2179
+New South Wales,Climate Zone 8,Y,1 Person Household,2087,1182,3445,2200
+New South Wales,Climate Zone 8,Y,2 Person Household,2563,1733,4361,3012
+New South Wales,Climate Zone 8,Y,3 Person Household,2656,1760,4388,2999
+New South Wales,Climate Zone 8,Y,4 Person Household,2656,1760,4388,2999
+New South Wales,Climate Zone 8,Y,5+ Person Household,3197,2248,5136,3594
+ACT,Climate Zone 7,N,1 Person Household,990,714,1172,867
+ACT,Climate Zone 7,N,2 Person Household,1467,1265,2087,1680
+ACT,Climate Zone 7,N,3 Person Household,1560,1292,2114,1667
+ACT,Climate Zone 7,N,4 Person Household,1560,1292,2114,1667
+ACT,Climate Zone 7,N,5+ Person Household,2101,1780,2863,2262
+ACT,Climate Zone 7,Y,1 Person Household,2073,1162,3566,2283
+ACT,Climate Zone 7,Y,2 Person Household,2550,1713,4482,3095
+ACT,Climate Zone 7,Y,3 Person Household,2643,1740,4509,3083
+ACT,Climate Zone 7,Y,4 Person Household,2643,1740,4509,3083
+ACT,Climate Zone 7,Y,5+ Person Household,3184,2228,5257,3678
+ACT,Climate Zone 8,N,1 Person Household,990,714,1172,867
+ACT,Climate Zone 8,N,2 Person Household,1467,1265,2087,1680
+ACT,Climate Zone 8,N,3 Person Household,1560,1292,2114,1667
+ACT,Climate Zone 8,N,4 Person Household,1560,1292,2114,1667
+ACT,Climate Zone 8,N,5+ Person Household,2101,1780,2863,2262
+ACT,Climate Zone 8,Y,1 Person Household,2073,1162,3566,2283
+ACT,Climate Zone 8,Y,2 Person Household,2550,1713,4482,3095
+ACT,Climate Zone 8,Y,3 Person Household,2643,1740,4509,3083
+ACT,Climate Zone 8,Y,4 Person Household,2643,1740,4509,3083
+ACT,Climate Zone 8,Y,5+ Person Household,3184,2228,5257,3678
+Tasmania,Climate Zone 7,N,1 Person Household,1410,1065,2060,1578
+Tasmania,Climate Zone 7,N,2 Person Household,1817,1414,2521,2014
+Tasmania,Climate Zone 7,N,3 Person Household,2072,1709,2858,2263
+Tasmania,Climate Zone 7,N,4 Person Household,2072,1709,2858,2263
+Tasmania,Climate Zone 7,N,5+ Person Household,2616,2057,3495,2753
+Tasmania,Climate Zone 7,Y,1 Person Household,2494,1513,4454,2994
+Tasmania,Climate Zone 7,Y,2 Person Household,2900,1862,4915,3430
+Tasmania,Climate Zone 7,Y,3 Person Household,3155,2157,5252,3678
+Tasmania,Climate Zone 7,Y,4 Person Household,3155,2157,5252,3678
+Tasmania,Climate Zone 7,Y,5+ Person Household,3699,2506,5889,4169
+Tasmania,Climate Zone 8,N,1 Person Household,1410,1065,2060,1578
+Tasmania,Climate Zone 8,N,2 Person Household,1817,1414,2521,2014
+Tasmania,Climate Zone 8,N,3 Person Household,2072,1709,2858,2263
+Tasmania,Climate Zone 8,N,4 Person Household,2072,1709,2858,2263
+Tasmania,Climate Zone 8,N,5+ Person Household,2616,2057,3495,2753
+Tasmania,Climate Zone 8,Y,1 Person Household,2494,1513,4454,2994
+Tasmania,Climate Zone 8,Y,2 Person Household,2900,1862,4915,3430
+Tasmania,Climate Zone 8,Y,3 Person Household,3155,2157,5252,3678
+Tasmania,Climate Zone 8,Y,4 Person Household,3155,2157,5252,3678
+Tasmania,Climate Zone 8,Y,5+ Person Household,3699,2506,5889,4169
+Victoria,Climate Zone 4,N,1 Person Household,1517,1346,2677,1754
+Victoria,Climate Zone 4,N,2 Person Household,1855,1819,2887,2038
+Victoria,Climate Zone 4,N,3 Person Household,2320,2321,3351,2400
+Victoria,Climate Zone 4,N,4 Person Household,2599,2582,3928,2898
+Victoria,Climate Zone 4,N,5+ Person Household,2599,2582,3928,2898
+Victoria,Climate Zone 4,Y,1 Person Household,889,1018,1477,929
+Victoria,Climate Zone 4,Y,2 Person Household,1228,1492,1688,1213
+Victoria,Climate Zone 4,Y,3 Person Household,1693,1994,2151,1575
+Victoria,Climate Zone 4,Y,4 Person Household,1972,2254,2728,2073
+Victoria,Climate Zone 4,Y,5+ Person Household,1972,2254,2728,2073
+Victoria,Climate Zone 6,N,1 Person Household,737,671,958,720
+Victoria,Climate Zone 6,N,2 Person Household,1077,1031,1340,1078
+Victoria,Climate Zone 6,N,3 Person Household,1253,1176,1615,1218
+Victoria,Climate Zone 6,N,4 Person Household,1402,1304,1738,1338
+Victoria,Climate Zone 6,N,5+ Person Household,1508,1421,1911,1465
+Victoria,Climate Zone 6,Y,1 Person Household,1710,1861,1988,1604
+Victoria,Climate Zone 6,Y,2 Person Household,2050,2221,2370,1961
+Victoria,Climate Zone 6,Y,3 Person Household,2226,2365,2645,2102
+Victoria,Climate Zone 6,Y,4 Person Household,2375,2494,2768,2221
+Victoria,Climate Zone 6,Y,5+ Person Household,2481,2610,2941,2349
+Victoria,Climate Zone 7,N,1 Person Household,863,819,1176,880
+Victoria,Climate Zone 7,N,2 Person Household,1270,1167,1637,1316
+Victoria,Climate Zone 7,N,3 Person Household,1525,1463,1974,1564
+Victoria,Climate Zone 7,N,4 Person Household,1525,1463,1974,1564
+Victoria,Climate Zone 7,N,5+ Person Household,2069,1811,2611,2054
+Victoria,Climate Zone 7,Y,1 Person Household,1946,1267,3571,2295
+Victoria,Climate Zone 7,Y,2 Person Household,2353,1615,4031,2732
+Victoria,Climate Zone 7,Y,3 Person Household,2608,1911,4369,2980
+Victoria,Climate Zone 7,Y,4 Person Household,2608,1911,4369,2980
+Victoria,Climate Zone 7,Y,5+ Person Household,3152,2259,5006,3470
+Victoria,Climate Zone 8,N,1 Person Household,863,819,1176,880
+Victoria,Climate Zone 8,N,2 Person Household,1270,1167,1637,1316
+Victoria,Climate Zone 8,N,3 Person Household,1525,1463,1974,1564
+Victoria,Climate Zone 8,N,4 Person Household,1525,1463,1974,1564
+Victoria,Climate Zone 8,N,5+ Person Household,2069,1811,2611,2054
+Victoria,Climate Zone 8,Y,1 Person Household,1946,1267,3571,2295
+Victoria,Climate Zone 8,Y,2 Person Household,2353,1615,4031,2732
+Victoria,Climate Zone 8,Y,3 Person Household,2608,1911,4369,2980
+Victoria,Climate Zone 8,Y,4 Person Household,2608,1911,4369,2980
+Victoria,Climate Zone 8,Y,5+ Person Household,3152,2259,5006,3470
+South Australia,Adelaide and Environs,N,1 Person Household,706,680,917,729
+South Australia,Adelaide and Environs,N,2 Person Household,1079,1029,1351,1055
+South Australia,Adelaide and Environs,N,3 Person Household,1245,1196,1525,1234
+South Australia,Adelaide and Environs,N,4 Person Household,1395,1412,1751,1461
+South Australia,Adelaide and Environs,N,5+ Person Household,1543,1475,1815,1523
+South Australia,Adelaide and Environs,Y,1 Person Household,1575,1686,1822,1525
+South Australia,Adelaide and Environs,Y,2 Person Household,1948,2035,2257,1851
+South Australia,Adelaide and Environs,Y,3 Person Household,2114,2203,2430,2030
+South Australia,Adelaide and Environs,Y,4 Person Household,2264,2418,2656,2257
+South Australia,Adelaide and Environs,Y,5+ Person Household,2412,2482,2721,2319
+South Australia,Mt Lofty ranges,N,1 Person Household,802,699,1094,825
+South Australia,Mt Lofty ranges,N,2 Person Household,1288,1051,1615,1259
+South Australia,Mt Lofty ranges,N,3 Person Household,1551,1374,1836,1607
+South Australia,Mt Lofty ranges,N,4 Person Household,1783,1664,2192,1759
+South Australia,Mt Lofty ranges,N,5+ Person Household,1890,1780,2363,1886
+South Australia,Mt Lofty ranges,Y,1 Person Household,1774,1887,2123,1708
+South Australia,Mt Lofty ranges,Y,2 Person Household,2261,2239,2644,2142
+South Australia,Mt Lofty ranges,Y,3 Person Household,2524,2562,2865,2490
+South Australia,Mt Lofty ranges,Y,4 Person Household,2756,2852,3220,2642
+South Australia,Mt Lofty ranges,Y,5+ Person Household,2862,2968,3392,2769
+South Australia,Yorke Peninsula and Kangaroo Island,N,1 Person Household,710,680,925,734
+South Australia,Yorke Peninsula and Kangaroo Island,N,2 Person Household,1089,1030,1364,1065
+South Australia,Yorke Peninsula and Kangaroo Island,N,3 Person Household,1259,1204,1539,1252
+South Australia,Yorke Peninsula and Kangaroo Island,N,4 Person Household,1413,1423,1772,1475
+South Australia,Yorke Peninsula and Kangaroo Island,N,5+ Person Household,1559,1489,1841,1540
+South Australia,Yorke Peninsula and Kangaroo Island,Y,1 Person Household,1584,1696,1836,1533
+South Australia,Yorke Peninsula and Kangaroo Island,Y,2 Person Household,1963,2045,2275,1864
+South Australia,Yorke Peninsula and Kangaroo Island,Y,3 Person Household,2133,2219,2450,2051
+South Australia,Yorke Peninsula and Kangaroo Island,Y,4 Person Household,2287,2439,2683,2275
+South Australia,Yorke Peninsula and Kangaroo Island,Y,5+ Person Household,2433,2505,2752,2340
+South Australia,Murraylands and Riverland,N,1 Person Household,735,700,973,768
+South Australia,Murraylands and Riverland,N,2 Person Household,1117,1051,1404,1100
+South Australia,Murraylands and Riverland,N,3 Person Household,1304,1247,1594,1306
+South Australia,Murraylands and Riverland,N,4 Person Household,1469,1473,1848,1534
+South Australia,Murraylands and Riverland,N,5+ Person Household,1608,1541,1923,1602
+South Australia,Murraylands and Riverland,Y,1 Person Household,1590,1697,1865,1549
+South Australia,Murraylands and Riverland,Y,2 Person Household,1972,2049,2296,1882
+South Australia,Murraylands and Riverland,Y,3 Person Household,2159,2244,2486,2087
+South Australia,Murraylands and Riverland,Y,4 Person Household,2324,2470,2741,2316
+South Australia,Murraylands and Riverland,Y,5+ Person Household,2463,2538,2815,2383
+South Australia,South East,N,1 Person Household,803,699,1096,826
+South Australia,South East,N,2 Person Household,1290,1051,1618,1261
+South Australia,South East,N,3 Person Household,1554,1375,1839,1611
+South Australia,South East,N,4 Person Household,1787,1667,2196,1762
+South Australia,South East,N,5+ Person Household,1893,1783,2368,1889
+South Australia,South East,Y,1 Person Household,1776,1889,2126,1710
+South Australia,South East,Y,2 Person Household,2264,2241,2648,2144
+South Australia,South East,Y,3 Person Household,2528,2565,2869,2494
+South Australia,South East,Y,4 Person Household,2760,2856,3226,2646
+South Australia,South East,Y,5+ Person Household,2867,2973,3398,2773
+South Australia,Mid North electricity benchmarks,N,1 Person Household,786,696,1064,809
+South Australia,Mid North electricity benchmarks,N,2 Person Household,1253,1047,1571,1225
+South Australia,Mid North electricity benchmarks,N,3 Person Household,1500,1344,1784,1545
+South Australia,Mid North electricity benchmarks,N,4 Person Household,1718,1622,2118,1710
+South Australia,Mid North electricity benchmarks,N,5+ Person Household,1832,1729,2272,1825
+South Australia,Mid North electricity benchmarks,Y,1 Person Household,1741,1853,2072,1678
+South Australia,Mid North electricity benchmarks,Y,2 Person Household,2208,2205,2579,2093
+South Australia,Mid North electricity benchmarks,Y,3 Person Household,2455,2502,2792,2413
+South Australia,Mid North electricity benchmarks,Y,4 Person Household,2673,2780,3126,2578
+South Australia,Mid North electricity benchmarks,Y,5+ Person Household,2787,2887,3280,2694
+South Australia,Central North,N,1 Person Household,772,736,1044,823
+South Australia,Central North,N,2 Person Household,1145,1091,1448,1143
+South Australia,Central North,N,3 Person Household,1352,1307,1660,1362
+South Australia,Central North,N,4 Person Household,1527,1538,1941,1611
+South Australia,Central North,N,5+ Person Household,1657,1601,2011,1675
+South Australia,Central North,Y,1 Person Household,1575,1672,1882,1556
+South Australia,Central North,Y,2 Person Household,1947,2027,2285,1876
+South Australia,Central North,Y,3 Person Household,2154,2244,2497,2096
+South Australia,Central North,Y,4 Person Household,2329,2474,2778,2345
+South Australia,Central North,Y,5+ Person Household,2459,2538,2849,2408
+South Australia,Port Augusta and Pastoral,N,1 Person Household,846,815,1186,936
+South Australia,Port Augusta and Pastoral,N,2 Person Household,1186,1178,1520,1218
+South Australia,Port Augusta and Pastoral,N,3 Person Household,1428,1426,1777,1452
+South Australia,Port Augusta and Pastoral,N,4 Person Household,1619,1658,2105,1754
+South Australia,Port Augusta and Pastoral,N,5+ Person Household,1734,1707,2155,1803
+South Australia,Port Augusta and Pastoral,Y,1 Person Household,1521,1598,1890,1554
+South Australia,Port Augusta and Pastoral,Y,2 Person Household,1861,1961,2224,1837
+South Australia,Port Augusta and Pastoral,Y,3 Person Household,2104,2208,2481,2070
+South Australia,Port Augusta and Pastoral,Y,4 Person Household,2295,2441,2809,2373
+South Australia,Port Augusta and Pastoral,Y,5+ Person Household,2410,2490,2859,2421
+South Australia,Eastern Eyre electricity benchmarks,N,1 Person Household,909,882,1308,1033
+South Australia,Eastern Eyre electricity benchmarks,N,2 Person Household,1222,1252,1584,1284
+South Australia,Eastern Eyre electricity benchmarks,N,3 Person Household,1496,1528,1880,1531
+South Australia,Eastern Eyre electricity benchmarks,N,4 Person Household,1700,1762,2248,1878
+South Australia,Eastern Eyre electricity benchmarks,N,5+ Person Household,1802,1800,2282,1914
+South Australia,Eastern Eyre electricity benchmarks,Y,1 Person Household,1477,1536,1899,1554
+South Australia,Eastern Eyre electricity benchmarks,Y,2 Person Household,1790,1906,2175,1805
+South Australia,Eastern Eyre electricity benchmarks,Y,3 Person Household,2064,2181,2471,2052
+South Australia,Eastern Eyre electricity benchmarks,Y,4 Person Household,2269,2415,2839,2399
+South Australia,Eastern Eyre electricity benchmarks,Y,5+ Person Household,2370,2453,2873,2435
+South Australia,West Coast electricity benchmarks,N,1 Person Household,694,677,895,717
+South Australia,West Coast electricity benchmarks,N,2 Person Household,1054,1026,1319,1030
+South Australia,West Coast electricity benchmarks,N,3 Person Household,1208,1174,1487,1189
+South Australia,West Coast electricity benchmarks,N,4 Person Household,1348,1381,1698,1425
+South Australia,West Coast electricity benchmarks,N,5+ Person Household,1501,1438,1749,1479
+South Australia,West Coast electricity benchmarks,Y,1 Person Household,1550,1662,1786,1502
+South Australia,West Coast electricity benchmarks,Y,2 Person Household,1911,2011,2210,1815
+South Australia,West Coast electricity benchmarks,Y,3 Person Household,2064,2159,2378,1974
+South Australia,West Coast electricity benchmarks,Y,4 Person Household,2204,2366,2588,2210
+South Australia,West Coast electricity benchmarks,Y,5+ Person Household,2358,2423,2640,2264
