@@ -97,21 +97,44 @@ db_disconnect(db_connection)
 ```{r}
 # load ggplot2
 library(ggplot2)
+library(ggthemes)
 ```
 
 Here we can do some plotting to showcase what we find in the data.
 ```{r}
-# plot Aunnal Accredited Installers In Each State
+# plot Annual Accredited Installers In Each State
 ggplot(df_annual_installers, aes(x = year, y = num_accredited_installers, group = short_code)) +
   geom_line(aes(color = short_code)) +
   geom_point(aes(color = short_code), size = 2, alpha = 1/2) +
   theme_bw(base_family = "Times") +
   labs(x = "Year", y = "Number of Accredited Installers") +
-  labs(title = "Aunnal Accredited Installers In Each State") + 
+  labs(title = "Annual Accredited Installers In Each State") + 
   scale_colour_hue(name="State") + 
   scale_x_continuous(name="Year", limits=c(2010, 2019), breaks=seq(2010,2019,1))
 ```
 
 ```{r}
+# plot ANNUAL SOLAR PV INSTALLATIONS ACROSS AUS
+df_annual_installations_2 <- df_annual_installations %>% 
+  group_by(year) %>%
+  tally(wt = number_of_installation, name = "annual_installation")
+df_annual_installations_2$annual_installation <- df_annual_installations_2$annual_installation / 100
+y_max <- max(df_annual_installations_2$annual_installation)
+  
+ggplot(df_annual_installations_2, aes(x = year, y = annual_installation)) +
+  geom_bar(stat="identity", position="dodge", width=0.5, fill = 'steelblue') +
+  # theme_economist(base_size=14) +
+  scale_fill_economist() +
+  theme(axis.ticks.length=unit(0.5,'cm')) +
+  guides(
+    axis.ticks.x = element_blank(),
+    plot.margin = unit(c(0.5,5.5,0.5,0.5), "cm"), # par(oma = c(b,l,t,r))
+    axis.ticks.length=unit(0.5,'cm')
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)), limits = c(0, y_max)) +
+  scale_x_continuous(name="Year", breaks=seq(2010,2019,1)) +
+  ggtitle("Annual Solar PV Installations Across Australia") +
+  xlab("") +
+  ylab("Number of solar PV systems installed annually (‘000)")
 
 ```
