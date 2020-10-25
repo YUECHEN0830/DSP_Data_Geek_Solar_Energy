@@ -131,10 +131,14 @@ ggplot(df_annual_installations_2, aes(x = year, y = annual_installation)) +
     plot.margin = unit(c(0.5,5.5,0.5,0.5), "cm"), # par(oma = c(b,l,t,r))
     axis.ticks.length=unit(0.5,'cm')
   ) +
-  scale_y_continuous(expand = expansion(mult = c(0, .1)), limits = c(0, y_max)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)), limits = c(0, y_max), labels = scales::comma) +
   scale_x_continuous(name="Year", breaks=seq(2010,2019,1)) +
   ggtitle("Annual Solar PV Installations Across Australia") +
   xlab("") +
   ylab("Number of solar PV systems installed annually (‘000)")
 
+```
+```{r}
+
+# plot output and price
 ```
