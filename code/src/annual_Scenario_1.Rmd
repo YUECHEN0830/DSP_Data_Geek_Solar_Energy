@@ -1,0 +1,117 @@
+---
+title: "DSP AT2 - Scenario 1"
+output:
+  html_document:
+    df_print: paged
+---
+
+Dashboard for scenario #1
+ * Scenario
+ * - state: NSW
+ * - Climate Zone: 4
+ * - household size: 4
+ * - swimming pool: N
+ * 
+ * Output
+ * - spring_kWh
+ * - summer_kWh
+ * - autumn_kWh
+ * - winter_kWh
+
+```{r}
+library(readr)
+library(here)
+library(reshape2)
+library(knitr)
+source(here("code/common", "mysql_connection.R"))
+library(dplyr)
+
+# using configuration file
+config <- read.csv(here("code/config", "db_connection_config.csv")) %>% filter(user_key == "rato_rds")
+db_connection <- db_connect(config)
+
+sql_annual_installers <- "SELECT 
+    t1.year,
+    t1.num_accredited_installers,
+    t2.state,
+    t2.short_code
+FROM
+    fct_annual_accredited_installers t1,
+    dim_aus_state t2
+WHERE
+    t1.dim_aus_state_key = t2.dim_aus_state_key;
+"
+
+sql_annual_capacity <- "SELECT 
+    t1.year,
+    t1.mw_installed,
+    t2.state,
+    t2.short_code
+FROM
+    fct_annual_installed_capacity t1,
+    dim_aus_state t2
+WHERE
+    t1.dim_aus_state_key = t2.dim_aus_state_key; 
+"
+
+sql_annual_installations <- "SELECT 
+    t1.year,
+    t1.number_of_installation,
+    t2.state,
+    t2.short_code
+FROM
+    fct_annual_sys_installation t1,
+    dim_aus_state t2
+WHERE
+    t1.dim_aus_state_key = t2.dim_aus_state_key; 
+"
+
+sql_state_city_sys_cost <- "SELECT 
+    ds.short_code,
+    ds.state,
+    faai.city,
+    dssc.system_size,
+    dssc.number_of_panels,
+    dssc.min_cost,
+    dssc.max_cost
+FROM
+    dsp_test.fct_solar_pv_sys_output AS faai
+        LEFT JOIN
+    dsp_test.dim_aus_state AS ds ON ds.dim_aus_state_key = faai.dim_aus_state_key
+        LEFT JOIN
+    dsp_test.dim_solar_sys_cost AS dssc ON dssc.dim_solar_sys_cost_key = faai.dim_solar_sys_cost_key
+"
+
+# get annual data across AUS in each state
+df_annual_installers <- db_query(db_connection, query_sql = sql_annual_installers)
+
+df_annual_capacity <- db_query(db_connection, query_sql = sql_annual_capacity)
+
+df_annual_installations <- db_query(db_connection, query_sql = sql_annual_installations)
+
+df_city_sys_costs <- db_query(db_connection, query_sql = sql_state_city_sys_cost)
+
+db_disconnect(db_connection)
+```
+
+```{r}
+# load ggplot2
+library(ggplot2)
+```
+
+Here we can do some plotting to showcase what we find in the data.
+```{r}
+# plot Aunnal Accredited Installers In Each State
+ggplot(df_annual_installers, aes(x = year, y = num_accredited_installers, group = short_code)) +
+  geom_line(aes(color = short_code)) +
+  geom_point(aes(color = short_code), size = 2, alpha = 1/2) +
+  theme_bw(base_family = "Times") +
+  labs(x = "Year", y = "Number of Accredited Installers") +
+  labs(title = "Aunnal Accredited Installers In Each State") + 
+  scale_colour_hue(name="State") + 
+  scale_x_continuous(name="Year", limits=c(2010, 2019), breaks=seq(2010,2019,1))
+```
+
+```{r}
+
+```

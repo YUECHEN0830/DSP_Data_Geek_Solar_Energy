@@ -30,7 +30,7 @@ library(dplyr)
 config <- read.csv(here("code/config", "db_connection_config.csv"))
 myconfig <- config %>% filter(user_key == "rato_rds")
 
-db_connection <- db_connect_from_config(myconfig)
+db_connection <- db_connect(myconfig)
 
 sql_elec_consumption_daily <- 'SELECT
 	das.state
