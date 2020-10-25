@@ -9,7 +9,10 @@ CREATE TABLE dim_fuel_type (
 	,CONSTRAINT dim_fuel_type_pk PRIMARY KEY (dim_fuel_type_key)
 )
 ;
+<<<<<<< HEAD
+=======
 /*
+>>>>>>> 98a95d9507a75b7decd8707810e1786249221235
 ALTER TABLE dim_fuel_type
   MODIFY COLUMN `dim_created_date` DATETIME DEFAULT CURRENT_TIMESTAMP
 ;
@@ -45,6 +48,30 @@ CREATE TABLE dim_solar_panel (
 /*
   dim_aus_state
 */
+<<<<<<< HEAD
+;
+/*
+  dim_solar_panel
+*/
+CREATE TABLE dim_solar_panel (
+	dim_solar_panel_key int(11) NOT NULL AUTO_INCREMENT
+	,dim_created_date datetime DEFAULT CURRENT_TIMESTAMP
+	,dim_updated_date datetime DEFAULT CURRENT_TIMESTAMP
+	,`Manufacturer` varchar(100)
+	,`URL` varchar(100)
+	,`Model` varchar(100)
+	,`Detail` varchar(100)
+	,`Series` varchar(100)
+	,`Current Model` varchar(100)
+	,`Country of Manufacturer` varchar(100)
+	,`Wattage PMAX` varchar(100)
+	,`Power Tolerance` varchar(100)
+	,`Short Circuit Current (ISC)` varchar(100)
+	,`Open Circuit Voltage (VOC)` varchar(100)
+	,`Module Efficiency` varchar(100)
+	,`Temperature Coefficient` varchar(100)
+	,CONSTRAINT dim_solar_panel_pk PRIMARY KEY (dim_solar_panel_key)
+=======
 CREATE TABLE dim_aus_state (
 	dim_aus_state_key int(11) NOT NULL AUTO_INCREMENT
 	,dim_created_date datetime DEFAULT CURRENT_TIMESTAMP
@@ -157,5 +184,6 @@ CREATE TABLE fct_household_electricity_consumption_benchmark (
 	,`winter_kWh` int
 	,`spring_kWh` int
 	,CONSTRAINT fct_household_electricity_consumption_benchmark_pk PRIMARY KEY (fct_household_electricity_consumption_benchmark_key)
+>>>>>>> 98a95d9507a75b7decd8707810e1786249221235
 )
 ;

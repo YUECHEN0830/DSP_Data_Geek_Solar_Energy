@@ -2,7 +2,7 @@ library(here)
 source(here("code/common", "mysql_connection.R"))
 
 # query my own rds
-db_connection <- db_connect(username = 'admin', password = 'password', dbname = 'dsp_db', host = 'mysql-instance1.ce9zfotawf0r.us-east-2.rds.amazonaws.com')
+db_connection <- db_connect(username = 'root', password = 'password', dbname = 'DSP_AT2', host = 'localhost')
 
 df <- db_query(db_connection, query_sql = "select * from solar_PV_system_output")
 head(df, 2)
@@ -21,7 +21,7 @@ db_disconnect(db_connection)
 # -------------------------------------------------------------------------------------
 
 # write table - dim_sys_cost
-db_connection <- db_connect(username = 'admin', password = 'password', dbname = 'dsp_db', host = 'mysql-instance1.ce9zfotawf0r.us-east-2.rds.amazonaws.com')
+db_connection <- db_connect(username = 'root', password = 'password', dbname = 'DSP_AT2', host = 'localhost')
 df_cost <- db_query(db_connection, query_sql = "select * from solar_system_cost;")
 
 db_write(db_connection, table_name = "dim_sys_cost", dataset = df_cost)
@@ -30,7 +30,7 @@ db_disconnect(db_connection)
 # -------------------------------------------------------------------------------------
 
 # write table - fct_solar_pv_sys_output
-db_connection <- db_connect(username = 'admin', password = 'password', dbname = 'dsp_db', host = 'mysql-instance1.ce9zfotawf0r.us-east-2.rds.amazonaws.com')
+db_connection <- db_connect(username = 'root', password = 'password', dbname = 'DSP_AT2', host = 'localhost')
 df_output <- db_query(db_connection, 
                        query_sql = "
                           select 
@@ -49,9 +49,18 @@ db_write(db_connection, table_name = "fct_solar_pv_sys_output", dataset = df_out
 db_disconnect(db_connection)
 
 # -------------------------------------------------------------------------------------
+library(dplyr)
 
+# using configuration file
+config <- read.csv(here("code/config", "db_connection_config.csv"))
+myconfig <- config %>% filter(user_key == "rato_rds")
 
+db_connection <- db_connect(myconfig)
 
+df <- db_query(db_connection, query_sql = "select * from dim_aus_state")
+head(df, 2)
+
+db_disconnect(db_connection)
 
 
 

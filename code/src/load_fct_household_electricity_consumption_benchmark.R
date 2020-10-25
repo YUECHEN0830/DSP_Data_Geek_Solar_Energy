@@ -4,12 +4,10 @@ library(tidyverse)
 
 ################################################
 # connect to Staging DB
-stg_user <- askForPassword('Type in user for Staging RDS...')
-stg_passwd <- askForPassword('Type in password for Staging RDS...')
 # Create a connection Object to MySQL database.
 conn_staging <- dbConnect(RMySQL::MySQL(), 
-                          user = stg_user, 
-                          password = stg_passwd, 
+                          user = Sys.getenv("stg_username"), 
+                          password = Sys.getenv("stg_password"), 
                           port = 3306,
                           dbname = 'db_dsp01',
                           host = 'dsp-01.cnk9sarev6lg.us-east-2.rds.amazonaws.com')
@@ -25,12 +23,10 @@ dbDisconnect(conn_staging)
 
 ################################################
 # Ready to load into DIM table
-dwh_user <- askForPassword('Type in user for DWH RDS...')
-dwh_passwd <- askForPassword('Type in password for DWH RDS...')
 # Create a connection Object to MySQL database.
 conn_dwh <- dbConnect(RMySQL::MySQL(), 
-                      user = dwh_user, 
-                      password = dwh_passwd, 
+                      user = Sys.getenv("dwh_username"), 
+                      password = Sys.getenv("dwh_password"), 
                       port = 3306,
                       dbname = 'dsp_test',
                       host = 'tutorial-db-instance.ce9zfotawf0r.us-east-2.rds.amazonaws.com')

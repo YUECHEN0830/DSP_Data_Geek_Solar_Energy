@@ -1,46 +1,42 @@
-library("RMySQL")
-library(rstudioapi)
-library(tidyverse)
+library(readr)
+library(here)
+library(reshape2)
+library(knitr)
+source(here("code/common", "mysql_connection.R"))
+
+# get data
+root_config <- read.csv(here("code/config", "db_connection_config.csv")) %>% filter(user_key == "yukai_root")
+db_connection <- db_connect(root_config)
+
+df_output <- db_query(db_connection, query_sql = "select * from solar_PV_system_output;")
+df_output <- df_output[-1,]
+df_output$`Solar system size` <- as.numeric(df_output$`Solar system size`)
+head(df_output)
+
+# names(df_output) <- c("state", "city", "size", "avg_daily_output")
+
+db_disconnect(db_connection)
+
+# ----------------------------------------------------------------------
+
+# insert data to the public rds server
+public_config <- read.csv(here("code/config", "db_connection_config.csv")) %>% filter(user_key == "rato_rds")
+db_connection_2 <- db_connect(public_config)
+
+df_cost <- db_query(db_connection_2, query_sql = "select * from dim_solar_sys_cost;")
+dim_aus_state <- db_query(db_connection_2, query_sql = "select * from dim_aus_state;")
+
+df_write <- df_output %>%
+  left_join(df_cost, by = c("Solar system size" = "system_size")) %>%
+  inner_join(dim_aus_state, by = c("State" = "short_code")) %>%
+  select("dim_aus_state_key", "City", "dim_solar_sys_cost_key", "Avg daily system output") %>%
+  arrange(dim_aus_state_key)
+
+names(df_write) <- c("dim_aus_state_key", "city", "dim_solar_sys_cost_key", "avg_daily_output")
+head(df_write)
+
+# insert data
+db_write(db_connection_2, table_name = "fct_solar_pv_sys_output", dataset = df_write)
+db_disconnect(db_connection_2)
 
 
-conn_staging <- dbConnect(RMySQL::MySQL(), 
-                          user = 'admin', 
-                          password = 'password', 
-                          port = 3306,
-                          dbname = 'dsp_db',
-                          host = 'mysql-instance1.ce9zfotawf0r.us-east-2.rds.amazonaws.com')
-
-## Get staging records
-stg_rows <- dbSendQuery(conn_staging, "select * from solar_PV_system_output;
-")
-## transform into dataframe
-df_staging <- fetch(stg_rows)
-
-## disconnect mysql server
-# dbDisconnect(conn_staging)
-
-# ################################################
-# Ready to load into DIM table
-# dwh_user <- askForPassword('Type in user for DWH RDS...')
-# dwh_passwd <- askForPassword('Type in password for DWH RDS...')
-# Create a connection Object to MySQL database.
-# conn_dwh <- dbConnect(RMySQL::MySQL(),
-#                       user = 'tutorial_user',
-#                       password = 'password',
-#                       port = 3306,
-#                       dbname = 'dsp_test',
-#                       host = 'tutorial-db-instance.ce9zfotawf0r.us-east-2.rds.amazonaws.com')
-
-# curr_dim <- dbReadTable(conn_staging,"dim_sys_cost")
-
-# Wrangling of dataframe into the right form to store in SQL
-
-# Save Records into DIM table
-# dbExecute(conn_dwh,"start transaction;")
-df_staging <- df_staging[-1,]
-names(df_staging) <- c("state", "city", "size", "avg_daily_output")
-dbWriteTable(conn_staging,"fct_solar_pv_sys_output",df_staging, append=TRUE, row.names=FALSE)
-
-# dbExecute(conn_dwh,"commit;")
-
-dbDisconnect(conn_staging)

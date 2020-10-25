@@ -1,8 +1,11 @@
 Use db_dsp01
 ;
+<<<<<<< HEAD
+=======
 /******************************
   stg_solar_panels
 */
+>>>>>>> 98a95d9507a75b7decd8707810e1786249221235
 DROP TABLE if EXISTS `stg_solar_panels`
 ;
 CREATE TABLE `stg_solar_panels` (
@@ -30,6 +33,8 @@ IGNORE 1 ROWS;
 ;
 select * from `stg_solar_panels`
 ;
+<<<<<<< HEAD
+=======
 
 /******************************
   stg_electricity_consumption_benchmarks
@@ -74,3 +79,4 @@ IGNORE 1 ROWS;
 ;
 select * from stg_Weather_Stations
 ;
+>>>>>>> 98a95d9507a75b7decd8707810e1786249221235
