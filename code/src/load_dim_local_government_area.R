@@ -1,6 +1,7 @@
 library("RMySQL")
 library(rstudioapi)
 library(tidyverse)
+library(here)
 
 # using configuration file
 config <- read.csv(here("code/config", "db_connection_config.csv"))
@@ -35,16 +36,17 @@ curr_dim <- dbReadTable(db_connection,"dim_local_government_area")
 
 # Wrangling of dataframe into the right form to store in SQL
 df_stg <- df_staging %>%
-  # select(-value, -fin_year) %>%
   distinct(local_government_area) %>%
   arrange(local_government_area)
+df_stg <- as.data.frame(gsub(c("[*]"), "", df_stg$local_government_area))
+colnames(df_stg) <- 'local_government_area'
+
 df_load <- df_stg %>%
   left_join(curr_dim, by='local_government_area') %>%
   filter(is.na(dim_local_government_area_key)==TRUE)
 df_load <- df_load %>%
   select(local_government_area)
-colnames(df_load) <- sub(".x", "", colnames(df_load))
-
+# colnames(df_load) <- sub(".x", "", colnames(df_load))
 
 # Save Records into DIM table
 dbExecute(db_connection,"start transaction;")
