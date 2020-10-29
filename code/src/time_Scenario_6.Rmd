@@ -1,0 +1,133 @@
+---
+  title: "DSP AT2 - Scenario 6"
+output:
+  html_document:
+  df_print: paged
+---
+  
+  Dashboard for scenario #1
+* Scenario
+* - state: NSW
+* - Climate Zone: 4
+* - household size: 4
+* - swimming pool: N
+* 
+  * Output
+* - spring_kWh
+* - summer_kWh
+* - autumn_kWh
+* - winter_kWh
+
+```{r}
+
+# Loading Packages
+library(readr)
+library(here)
+library(reshape2)
+library(knitr)
+source(here("code/common", "mysql_connection.R"))
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+
+
+```
+
+```{R}
+
+# using configuration file
+config <- read.csv(here("code/config", "db_connection_config.csv")) %>% filter(user_key == "rato_rds")
+db_connection <- db_connect(config)
+
+# spl latitude whether station
+
+sql_latitude_whether_station <- "SELECT
+    dws.latitude
+    ,dws.longitude
+    ,f.dim_date_key
+    ,f.daily_exposure
+  ,dws.station_name
+    
+FROM fct_daily_solar_exposure as f
+left join dim_weather_station as dws on dws.dim_weather_station_key = f.dim_weather_station_key
+;
+"
+
+# sql average solar exposure
+
+sql_average_solar_exposure <- "SELECT
+dws.latitude,
+dws.longitude,
+AVG(f.daily_exposure) AS avg_daily_exposure,
+dws.station_name
+FROM
+fct_daily_solar_exposure AS f
+LEFT JOIN
+dim_weather_station AS dws ON dws.dim_weather_station_key = f.dim_weather_station_key
+GROUP BY dws.latitude , dws.longitude , dws.station_name
+;
+"
+
+ 
+# sql solar exposure
+
+sql_solar_exposure <- "select
+    STR_TO_DATE(CAST(f.dim_date_key as CHAR), '%Y%m%d') as solar_date
+    ,dws.station_number 
+    ,dws.station_name 
+    ,f.daily_exposure 
+from fct_daily_solar_exposure as f
+left join dim_weather_station as dws on dws.dim_weather_station_key = f.dim_weather_station_key 
+where 1=1
+and dws.dim_weather_station_key is not null
+and f.dim_date_key BETWEEN 20200101 and 20201231
+and dws.station_number = '066062'
+;
+"
+
+sql_yearly_lga_solar <- "SELECT 
+    t1.year,
+    t1.daily_average,
+    t1.total_MWh,
+    t1.ttotal_customers,
+    t2.local_government_area
+
+FROM
+    fct_yearly_lga_solar t1,
+    dim_local_government_area t2
+
+WHERE
+    t1.dim_local_government_area_key = t2.dim_local_government_area_key; "
+
+
+# get annual data across AUS in each state
+
+df_latitude_whether_station <- db_query(db_connection, query_sql = sql_latitude_whether_station)
+df_average_solar_exposure <- db_query(db_connection, query_sql = sql_average_solar_exposure)
+df_solar_exposure <- db_query(db_connection, query_sql = sql_solar_exposure)
+df_yearly_lga_solar <- db_query(db_connection, query_sql = sql_yearly_lga_solar)
+
+
+# close DB connection
+
+db_disconnect(db_connection)
+```
+
+
+Here we can do some plotting to showcase what we find in the data.
+```{r}
+# plot Annual Accredited Installers In Each State
+
+solar_syd <- df_solar_exposure %>% 
+             filter(station_name == 'SYDNEY (OBSERVATORY HILL)') %>% 
+             filter()
+
+ggplot(solar_syd) +
+  geom_smooth(aes(x = solar_date, y = daily_exposure)) +
+  
+  theme_bw(base_family = "Times") +
+  labs(x = "Month", y = "kWh") +
+  labs(title = "Solar Exposure")
+  
+```
+
