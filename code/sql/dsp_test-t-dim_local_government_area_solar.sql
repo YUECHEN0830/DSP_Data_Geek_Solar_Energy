@@ -15,6 +15,27 @@ CREATE TABLE dim_local_government_area (
 select * from dim_local_government_area
 ;
 /*
+  dim_local_government_area_postcode
+*/
+-- DROP TABLE IF EXISTS dim_local_government_area_postcode
+CREATE TABLE dim_local_government_area_postcode (
+	`dim_local_government_area_postcode_key` int(11) NOT NULL AUTO_INCREMENT
+	,dim_created_date datetime DEFAULT CURRENT_TIMESTAMP
+	,dim_updated_date datetime DEFAULT CURRENT_TIMESTAMP
+	,dim_local_government_area_key int
+	,postcode varchar(10)
+	,CONSTRAINT `dim_local_government_area_postcode_pk` PRIMARY KEY (`dim_local_government_area_postcode_key`)
+)
+;
+/*
+insert into dim_local_government_area_postcode (dim_local_government_area_key, postcode)
+select
+	dim_local_government_area_key
+	,postcode
+from dsp_test.postcode_link_to_lga_csv
+*/
+;
+/*
   fct_yearly_lga_solar
 */
 CREATE TABLE fct_yearly_lga_solar (
