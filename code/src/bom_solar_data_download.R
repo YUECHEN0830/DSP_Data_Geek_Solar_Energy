@@ -1,8 +1,9 @@
 library(rvest)
 library(here)
 
-bom_solar_data_download <- function(data_type=203, station_num, dest_folder_path="data/raw_datasets") {
-  html_url <- "http://www.bom.gov.au/jsp/ncc/cdio/weatherData/av?p_display_type=dataFile&p_startYear=&p_c=&" %>%
+bom_solar_data_download <- function(data_type=203, station_num, p_display_type, dest_folder_path="data/raw_datasets") {
+  html_url <- "http://www.bom.gov.au/jsp/ncc/cdio/weatherData/av?p_startYear=&p_c=&" %>%
+    paste0("p_display_type=", p_display_type, "&") %>%
     paste0("p_nccObsCode=", data_type, "&") %>%
     paste0("p_stn_num=", station_num)
   web <- read_html(html_url)
@@ -21,13 +22,13 @@ bom_solar_data_download <- function(data_type=203, station_num, dest_folder_path
   product_code <- product_code_line[[1]][3]
   
   # get file path
-  file_path <- here(dest_folder_path, paste0(paste(product_code, station_num, "2020", sep = "_"), ".zip"))
+  file_path <- here::here(dest_folder_path, paste0(paste(product_code, station_num, "2020", sep = "_"), ".zip"))
   
   # download
   download.file(url = file_url, destfile = file_path, method = "curl")
   
   # decompress zip file
-  unzip(file_path, exdir=here(dest_folder_path))
+  unzip(file_path, exdir=here::here(dest_folder_path))
   file.remove(file_path)
 }
 
