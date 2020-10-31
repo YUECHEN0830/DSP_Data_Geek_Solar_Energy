@@ -1,6 +1,7 @@
 library("RMySQL")
 library(rstudioapi)
 library(tidyverse)
+library(here)
 
 ################################################
 # connect to Staging DB
@@ -9,7 +10,7 @@ conn_staging <- dbConnect(RMySQL::MySQL(),
                           user = Sys.getenv("stg_username"), 
                           password = Sys.getenv("stg_password"), 
                           port = 3306,
-                          dbname = 'db_dsp01',
+                          dbname = 'dsp_test',
                           host = 'dsp-01.cnk9sarev6lg.us-east-2.rds.amazonaws.com')
 
 ## Get staging records
@@ -56,6 +57,9 @@ df_staging <- fetch(stg_rows)
 ## disconnect mysql server
 dbDisconnect(conn_staging)
 
+df_staging <- read.csv(here("data/Bureau of Meteorology", "One Minute Solar Data - List of stations.csv"))
+colnames(df_staging) <- c('station_number','station_name','start_year','end_year','year_old')
+df_staging$station_number <- as.factor(str_pad(df_staging$station_number,6,pad = '0'))
 ################################################
 # Ready to load into DIM table
 # Create a connection Object to MySQL database.
@@ -64,7 +68,7 @@ conn_dwh <- dbConnect(RMySQL::MySQL(),
                       password = Sys.getenv("dwh_password"), 
                       port = 3306,
                       dbname = 'dsp_test',
-                      host = 'tutorial-db-instance.ce9zfotawf0r.us-east-2.rds.amazonaws.com')
+                      host = 'dsp-01.cnk9sarev6lg.us-east-2.rds.amazonaws.com')
 
 curr_dim <- dbReadTable(conn_dwh,"dim_weather_station")
 
@@ -77,7 +81,7 @@ df_load <- df_stg %>%
   left_join(curr_dim, by='station_number') %>%
   filter(is.na(dim_weather_station_key)==TRUE)
 df_load <- df_load %>%
-  select(colnames(df_load[,1:8]))
+  select(colnames(df_load[,1:4]))
 colnames(df_load) <- sub(".x", "", colnames(df_load))
 
 
