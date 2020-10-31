@@ -18,7 +18,7 @@ output:
 * - autumn_kWh
 * - winter_kWh
 
-```{r}
+```{R, echo=TRUE, warning=FALSE, message=FALSE}
 
 # Loading Packages
 library(readr)
@@ -34,7 +34,7 @@ library(lubridate)
 
 ```
 
-```{R}
+```{R, echo=TRUE, warning=FALSE, message=FALSE}
 
 # using configuration file
 config <- read.csv(here("code/config", "db_connection_config.csv")) %>% filter(user_key == "rato_rds")
@@ -120,6 +120,7 @@ WHERE
     t1.dim_solar_sys_cost_key = t2.dim_solar_sys_cost_key; 
      "
 
+# sql solar pv sys output
 
 sql_dim_solar_panel <- "SELECT
     t1.`Model`,
@@ -130,12 +131,9 @@ FROM
     dim_solar_panel t1; 
 "
   
-  
-  
-  
 
 
-# get annual data across AUS in each state
+# get Data from AWS 
 
 df_latitude_whether_station <- db_query(db_connection, query_sql = sql_latitude_whether_station)
 df_average_solar_exposure <- db_query(db_connection, query_sql = sql_average_solar_exposure)
@@ -151,7 +149,7 @@ db_disconnect(db_connection)
 ```
 
 
-```{R}
+```{R, echo=TRUE, warning=FALSE, message=FALSE}
 
 # Wrangling 
 
@@ -160,8 +158,6 @@ df_dim_solar_panel <- df_dim_solar_panel %>%
                       mutate(`Module Efficiency` = as.numeric(`Module Efficiency`)) %>% 
                       mutate(`Temperature Coefficient` = as.numeric(`Temperature Coefficient`))
 
-glimpse(solar_syd)
-
 
 solar_syd <- df_solar_exposure %>% 
              filter(station_name == 'SYDNEY (OBSERVATORY HILL)') %>% 
@@ -169,7 +165,11 @@ solar_syd <- df_solar_exposure %>%
              mutate(year = year(solar_date)) %>% 
              mutate(month = month(solar_date)) %>% 
              mutate(`daily_exposure` = as.numeric(`daily_exposure`)) %>%
-             mutate(output_kWh = ((daily_exposure * df_dim_solar_panel[8,2] ) / 1000) * (3.6/1.636) * (1-0.25))
+             mutate(`daily_exposure` = `daily_exposure`/3.6) %>%
+             mutate(output_kWh = ((daily_exposure * df_dim_solar_panel[8,2] ) / 1000) * (1 / 1.636) * (1 - 0.25))
+
+glimpse(solar_syd)
+
              
 # mutate(output_kWh = (df_dim_solar_panel[8,2] * df_dim_solar_panel$daily_exposure * 4 * (1 - df_dim_solar_panel[8,3] - (df_dim_solar_panel[8,4] * (20 + 30 - 25)))))
 
@@ -189,10 +189,20 @@ solar_syd_m <- solar_syd %>%
                summarise(output_kWh_m = sum(output_kWh))
 
 
+solar_syd_mean <- solar_syd %>% 
+                  group_by(year) %>%
+                  summarise(output_kWh_mean = mean(output_kWh))
+
+df_yearly_lga_solar <- df_yearly_lga_solar %>% 
+                       filter(local_government_area == 'SYDNEY')
+
+
+
 ```
 
 
-```{r}
+```{R, echo=TRUE, warning=FALSE, message=FALSE}
+
 # plot Annual Accredited Installers In Each State
 
 
@@ -200,46 +210,66 @@ ggplot(solar_syd) +
   geom_smooth(aes(x = solar_date, y = daily_exposure), colour = 'orange') +
   geom_smooth(aes(x = solar_date, y = output_kWh), colour = 'green') +
   theme_bw(base_family = "Times") +
-  labs(x = "Month", y = "kWh") +
+  labs(x = "Date", y = "kWh/m2") +
   labs(title = "Solar Exposure")
   
 ```
 
 
-```{r}
+```{R, echo=TRUE, warning=FALSE, message=FALSE}
+
 # plot Annual Accredited Installers In Each State
 
   ggplot(solar_syd_m) +
-      geom_bar(aes(x = month, y =  output_kWh_m), stat = "identity", fill = "darkorchid4") +
+      geom_bar(aes(x = month, y =  output_kWh_m), stat = "identity", fill = "orange") +
   facet_wrap(~ year, ncol = 2) +
       labs(title = "Total Monthly kWh estimated",
            subtitle = "Data plotted by year",
-           y = "kWh",
-           x = "Month") + theme_bw(base_size = 15)
+           y = "kWh/m2",
+           x = "Month") + 
+  theme_bw(base_family = "Times")
   
 ```
 
 
+```{R, echo=TRUE, warning=FALSE, message=FALSE}
 
-
-```{r}
 # plot Annual Accredited Installers In Each State
 
   ggplot(solar_syd_m) +
       geom_smooth(aes(x = month, y =  output_kWh_m)) +
-      geom_abline(slope = 0, intercept = (10.1*365/12)) +
-  facet_wrap(~ year, ncol = 2) +
+  facet_wrap(vars(year), ncol = 2) +
       labs(title = "Total Monthly kWh estimated",
       subtitle = "Data plotted by year",
-      y = "kWh",
+      y = "kWh/m2",
       x = "Month") + 
       theme_bw(base_family = "Times")
   
 
 
+  
+```
 
 
+```{R, echo=TRUE, warning=FALSE, message=FALSE}
 
+# plot Annual Accredited Installers In Each State
+
+solar_syd_m19 <- solar_syd_m %>% filter(year == 2019)
+solar_syd_mean19 <- solar_syd_mean %>% filter(year == 2019)
+df_yearly_lga_solar19 <- df_yearly_lga_solar %>% filter(year == 2019)
+
+  ggplot(solar_syd_m19) +
+      geom_smooth(aes(x = month, y =  output_kWh_m)) +
+      geom_abline(slope = 0, intercept = (df_yearly_lga_solar19$daily_average * 365 / 12), colour = "orange") +
+      annotate()
+      geom_abline(slope = 0, intercept = (solar_syd_mean19$output_kWh_mean * 365 / 12), colour ="green") +
+      labs(title = "Total Monthly kWh estimated",
+      subtitle = "Data plotted by year",
+      y = "kWh/m2",
+      x = "Month") + 
+      theme_bw(base_family = "Times")
+  
 
   
 ```
