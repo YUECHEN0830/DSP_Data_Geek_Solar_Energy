@@ -27,6 +27,7 @@ bom_solar_data_download(data_type = 122,station_num=15135,p_display_type = "dail
 bom_solar_data_download(data_type = 122,station_num=32040,p_display_type = "dailyDataFile",dest_folder_path = "data/raw_datasets/BOM_Temperature")
 bom_solar_data_download(data_type = 122,station_num=72150,p_display_type = "dailyDataFile",dest_folder_path = "data/raw_datasets/BOM_Temperature")
 bom_solar_data_download(data_type = 122,station_num=16001,p_display_type = "dailyDataFile",dest_folder_path = "data/raw_datasets/BOM_Temperature")
+bom_solar_data_download(data_type = 122,station_num=66062,p_display_type = "dailyDataFile",dest_folder_path = "data/raw_datasets/BOM_Temperature")
 
 
 
@@ -52,3 +53,4 @@ bom_solar_data_download(data_type = 123,station_num=15135,p_display_type = "dail
 bom_solar_data_download(data_type = 123,station_num=32040,p_display_type = "dailyDataFile",dest_folder_path = "data/raw_datasets/BOM_Temperature")
 bom_solar_data_download(data_type = 123,station_num=72150,p_display_type = "dailyDataFile",dest_folder_path = "data/raw_datasets/BOM_Temperature")
 bom_solar_data_download(data_type = 123,station_num=16001,p_display_type = "dailyDataFile",dest_folder_path = "data/raw_datasets/BOM_Temperature")
+bom_solar_data_download(data_type = 123,station_num=66062,p_display_type = "dailyDataFile",dest_folder_path = "data/raw_datasets/BOM_Temperature")
