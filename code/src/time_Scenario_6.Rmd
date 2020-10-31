@@ -29,6 +29,7 @@ source(here("code/common", "mysql_connection.R"))
 library(dplyr)
 library(ggplot2)
 library(ggthemes)
+library(lubridate)
 
 
 ```
@@ -42,31 +43,30 @@ db_connection <- db_connect(config)
 # spl latitude whether station
 
 sql_latitude_whether_station <- "SELECT
-    dws.latitude
+     dws.latitude
     ,dws.longitude
     ,f.dim_date_key
     ,f.daily_exposure
-  ,dws.station_name
-    
-FROM fct_daily_solar_exposure as f
-left join dim_weather_station as dws on dws.dim_weather_station_key = f.dim_weather_station_key
-;
-"
+    ,dws.station_name
+FROM 
+    fct_daily_solar_exposure as f
+LEFT JOIN 
+    dim_weather_station as dws on dws.dim_weather_station_key = f.dim_weather_station_key;"
+
 
 # sql average solar exposure
 
 sql_average_solar_exposure <- "SELECT
-dws.latitude,
-dws.longitude,
-AVG(f.daily_exposure) AS avg_daily_exposure,
-dws.station_name
+    dws.latitude,
+    dws.longitude,
+    AVG(f.daily_exposure) AS avg_daily_exposure,
+    dws.station_name
 FROM
-fct_daily_solar_exposure AS f
+    fct_daily_solar_exposure AS f
 LEFT JOIN
-dim_weather_station AS dws ON dws.dim_weather_station_key = f.dim_weather_station_key
-GROUP BY dws.latitude , dws.longitude , dws.station_name
-;
-"
+    dim_weather_station AS dws ON dws.dim_weather_station_key = f.dim_weather_station_key
+GROUP BY 
+    dws.latitude , dws.longitude , dws.station_name;"
 
  
 # sql solar exposure
@@ -76,14 +76,18 @@ sql_solar_exposure <- "select
     ,dws.station_number 
     ,dws.station_name 
     ,f.daily_exposure 
-from fct_daily_solar_exposure as f
-left join dim_weather_station as dws on dws.dim_weather_station_key = f.dim_weather_station_key 
-where 1=1
-and dws.dim_weather_station_key is not null
-and f.dim_date_key BETWEEN 20200101 and 20201231
-and dws.station_number = '066062'
+FROM 
+    fct_daily_solar_exposure as f
+LEFT JOIN 
+    dim_weather_station as dws on dws.dim_weather_station_key = f.dim_weather_station_key 
+WHERE 1=1
+    AND dws.dim_weather_station_key is not null
+    AND f.dim_date_key BETWEEN 20180101 and 20191231
+    AND dws.station_number = '066062'
 ;
 "
+
+# sql yearly lga solar
 
 sql_yearly_lga_solar <- "SELECT 
     t1.year,
@@ -100,12 +104,45 @@ WHERE
     t1.dim_local_government_area_key = t2.dim_local_government_area_key; "
 
 
+# sql solar pv sys output
+
+fct_solar_pv_sys_output <- "SELECT 
+    t1.city,
+    t1.avg_daily_output,
+    t2.system_size,
+    t2.number_of_panels,
+    t2.min_cost,
+    t2.max_cost
+FROM
+    fct_solar_pv_sys_output t1,
+    dim_solar_sys_cost t2
+WHERE
+    t1.dim_solar_sys_cost_key = t2.dim_solar_sys_cost_key; 
+     "
+
+
+sql_dim_solar_panel <- "SELECT
+    t1.`Model`,
+    t1.`Wattage PMAX`,
+    t1.`Module Efficiency`, 
+    t1.`Temperature Coefficient`
+FROM 
+    dim_solar_panel t1; 
+"
+  
+  
+  
+  
+
+
 # get annual data across AUS in each state
 
 df_latitude_whether_station <- db_query(db_connection, query_sql = sql_latitude_whether_station)
 df_average_solar_exposure <- db_query(db_connection, query_sql = sql_average_solar_exposure)
 df_solar_exposure <- db_query(db_connection, query_sql = sql_solar_exposure)
 df_yearly_lga_solar <- db_query(db_connection, query_sql = sql_yearly_lga_solar)
+df_solar_pv_sys_output <- db_query(db_connection, query_sql = fct_solar_pv_sys_output)
+df_dim_solar_panel <- db_query(db_connection, query_sql = sql_dim_solar_panel)
 
 
 # close DB connection
@@ -114,17 +151,49 @@ db_disconnect(db_connection)
 ```
 
 
-Here we can do some plotting to showcase what we find in the data.
-```{r}
-# plot Annual Accredited Installers In Each State
+```{R}
+
+# Wrangling 
+
+df_dim_solar_panel <- df_dim_solar_panel %>%
+                      mutate(`Wattage PMAX` = as.numeric(`Wattage PMAX`)) %>% 
+                      mutate(`Module Efficiency` = as.numeric(`Module Efficiency`)) %>% 
+                      mutate(`Temperature Coefficient` = as.numeric(`Temperature Coefficient`))
+
+glimpse(solar_syd)
+
 
 solar_syd <- df_solar_exposure %>% 
              filter(station_name == 'SYDNEY (OBSERVATORY HILL)') %>% 
-             filter()
+             mutate(solar_date = ymd(solar_date)) %>% 
+             mutate(`daily_exposure` = as.numeric(`daily_exposure`)) %>%
+             mutate(output_kWh = ((daily_exposure * df_dim_solar_panel[8,2] ) / 1000) * (3.6/1.636) * (1-0.25))
+             
+# mutate(output_kWh = (df_dim_solar_panel[8,2] * df_dim_solar_panel$daily_exposure * 4 * (1 - df_dim_solar_panel[8,3] - (df_dim_solar_panel[8,4] * (20 + 30 - 25)))))
+
+
+
+# Calculation 
+# kWp = n * Wp / 1000
+# Ep = Em * kWp * n
+# nt = 1-[j * (Tc - Tstc)]  Tstc = 25, Tc = Ta + 30
+
+glimpse(df_dim_solar_panel)
+
+# output_kWh <- df_dim_solar_panel[8,2] * `radiation` * 4 * (1 - [df_dim_solar_panel[8,2] * (temp + 30 - 25)])
+
+
+
+```
+
+
+```{r}
+# plot Annual Accredited Installers In Each State
+
 
 ggplot(solar_syd) +
-  geom_smooth(aes(x = solar_date, y = daily_exposure)) +
-  
+  geom_smooth(aes(x = solar_date, y = daily_exposure), colour = 'orange') +
+  geom_smooth(aes(x = solar_date, y = output_kWh), colour = 'green') +
   theme_bw(base_family = "Times") +
   labs(x = "Month", y = "kWh") +
   labs(title = "Solar Exposure")
