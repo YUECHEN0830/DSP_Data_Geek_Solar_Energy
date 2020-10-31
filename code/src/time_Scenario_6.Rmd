@@ -166,6 +166,8 @@ glimpse(solar_syd)
 solar_syd <- df_solar_exposure %>% 
              filter(station_name == 'SYDNEY (OBSERVATORY HILL)') %>% 
              mutate(solar_date = ymd(solar_date)) %>% 
+             mutate(year = year(solar_date)) %>% 
+             mutate(month = month(solar_date)) %>% 
              mutate(`daily_exposure` = as.numeric(`daily_exposure`)) %>%
              mutate(output_kWh = ((daily_exposure * df_dim_solar_panel[8,2] ) / 1000) * (3.6/1.636) * (1-0.25))
              
@@ -182,6 +184,9 @@ glimpse(df_dim_solar_panel)
 
 # output_kWh <- df_dim_solar_panel[8,2] * `radiation` * 4 * (1 - [df_dim_solar_panel[8,2] * (temp + 30 - 25)])
 
+solar_syd_m <- solar_syd %>% 
+               group_by(month, year) %>%
+               summarise(output_kWh_m = sum(output_kWh))
 
 
 ```
@@ -199,4 +204,48 @@ ggplot(solar_syd) +
   labs(title = "Solar Exposure")
   
 ```
+
+
+```{r}
+# plot Annual Accredited Installers In Each State
+
+  ggplot(solar_syd_m) +
+      geom_bar(aes(x = month, y =  output_kWh_m), stat = "identity", fill = "darkorchid4") +
+  facet_wrap(~ year, ncol = 2) +
+      labs(title = "Total Monthly kWh estimated",
+           subtitle = "Data plotted by year",
+           y = "kWh",
+           x = "Month") + theme_bw(base_size = 15)
+  
+```
+
+
+
+
+```{r}
+# plot Annual Accredited Installers In Each State
+
+  ggplot(solar_syd_m) +
+      geom_smooth(aes(x = month, y =  output_kWh_m)) +
+      geom_abline(slope = 0, intercept = (10.1*365/12)) +
+  facet_wrap(~ year, ncol = 2) +
+      labs(title = "Total Monthly kWh estimated",
+      subtitle = "Data plotted by year",
+      y = "kWh",
+      x = "Month") + 
+      theme_bw(base_family = "Times")
+  
+
+
+
+
+
+
+  
+```
+
+
+
+
+
 
