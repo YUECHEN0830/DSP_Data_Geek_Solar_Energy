@@ -2,6 +2,11 @@ library(rvest)
 library(here)
 
 bom_solar_data_download <- function(data_type=203, station_num, p_display_type, dest_folder_path="data/raw_datasets") {
+  
+  if(!file.exists(here::here(dest_folder_path))) {
+    dir.create(here::here(dest_folder_path))
+  }
+  
   html_url <- "http://www.bom.gov.au/jsp/ncc/cdio/weatherData/av?p_startYear=&p_c=&" %>%
     paste0("p_display_type=", p_display_type, "&") %>%
     paste0("p_nccObsCode=", data_type, "&") %>%
