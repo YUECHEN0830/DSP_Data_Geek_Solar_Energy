@@ -23,11 +23,13 @@ library(readr)
 library(here)
 library(reshape2)
 library(knitr)
-source(here("code/common", "mysql_connection.R"))
+source(here::here("code/common", "mysql_connection.R"))
 library(dplyr)
+library(hrbrthemes)
+library(viridis)
 
 # using configuration file
-config <- read.csv(here("code/config", "db_connection_config.csv")) %>% filter(user_key == "rato_rds")
+config <- read.csv(here::here("code/config", "db_connection_config.csv")) %>% filter(user_key == "rato_rds")
 db_connection <- db_connect(config)
 
 sql_annual_installers <- "SELECT 
@@ -72,6 +74,8 @@ sql_state_city_sys_cost <- "SELECT
     faai.city,
     dssc.system_size,
     dssc.number_of_panels,
+    faai.avg_daily_output,
+    round(faai.avg_daily_output * 365, 0) as avg_annual_output,
     dssc.min_cost,
     dssc.max_cost
 FROM
@@ -82,6 +86,93 @@ FROM
     dsp_test.dim_solar_sys_cost AS dssc ON dssc.dim_solar_sys_cost_key = faai.dim_solar_sys_cost_key
 "
 
+sql_household_consumption = "SELECT 
+    t1.dim_aus_state_key,
+    t2.short_code,
+    t4.climate_zone,
+    t1.dim_household_size_key,
+    t3.household_size,
+    t1.swimming_pool_ind,
+    t1.autumn_kWh + t1.summer_kWh + t1.winter_kWh + t1.spring_kWh yearly_consumpution_kWh
+FROM
+    fct_household_electricity_consumption_benchmark t1
+        LEFT JOIN
+    dim_aus_state t2 ON t1.dim_aus_state_key = t2.dim_aus_state_key
+        LEFT JOIN
+    dim_household_size t3 ON t1.dim_household_size_key = t3.dim_household_size_key
+        LEFT JOIN
+    dim_climate_zone t4 ON t1.dim_climate_zone_key = t4.dim_climate_zone_key
+ORDER BY t1.dim_aus_state_key , t1.dim_household_size_key , t1.swimming_pool_ind , t1.dim_climate_zone_key;
+"
+
+sql_consumption_vs_output <- "SELECT 
+    t_comb.short_code,
+    t_comb.dim_household_size_key,
+    t_comb.household_size,
+    t_comb.yearly_consumpution_kWh,
+    t_comb.climate_zone,
+    t_comb.swimming_pool_ind,
+    min(system_size) min_system_size,
+    min(number_of_panels) min_number_of_panels,
+    min(avg_annual_output) min_avg_annual_output
+FROM
+    (SELECT 
+        t_con.short_code,
+        t_con.climate_zone,
+		t_con.dim_household_size_key,
+		t_con.household_size,
+        t_con.swimming_pool_ind,
+		t_con.yearly_consumpution_kWh,
+		t_output.system_size,
+		t_output.number_of_panels,
+		t_output.mean_cost,
+		t_output.avg_annual_output
+    FROM
+        (SELECT 
+        t1.dim_aus_state_key,
+            t2.short_code,
+            t4.climate_zone,
+            t1.dim_household_size_key,
+            t3.household_size,
+            t1.swimming_pool_ind,
+            t1.autumn_kWh + t1.summer_kWh + t1.winter_kWh + t1.spring_kWh yearly_consumpution_kWh
+    FROM
+        fct_household_electricity_consumption_benchmark t1
+    LEFT JOIN dim_aus_state t2 ON t1.dim_aus_state_key = t2.dim_aus_state_key
+    LEFT JOIN dim_household_size t3 ON t1.dim_household_size_key = t3.dim_household_size_key
+    LEFT JOIN dim_climate_zone t4 ON t1.dim_climate_zone_key = t4.dim_climate_zone_key
+    ORDER BY t1.dim_aus_state_key , t1.dim_household_size_key , t1.swimming_pool_ind , t1.dim_climate_zone_key) t_con, (SELECT 
+        ds.short_code,
+            ds.state,
+            faai.city,
+            dssc.system_size,
+            dssc.number_of_panels,
+            faai.avg_daily_output,
+            ROUND(faai.avg_daily_output * 365, 0) AS avg_annual_output,
+            dssc.min_cost,
+            dssc.max_cost,
+            ROUND((dssc.min_cost + dssc.max_cost) / 2, 2) AS mean_cost
+    FROM
+        dsp_test.fct_solar_pv_sys_output AS faai
+    LEFT JOIN dsp_test.dim_aus_state AS ds ON ds.dim_aus_state_key = faai.dim_aus_state_key
+    LEFT JOIN dsp_test.dim_solar_sys_cost AS dssc ON dssc.dim_solar_sys_cost_key = faai.dim_solar_sys_cost_key) t_output
+    WHERE
+        t_con.short_code = t_output.short_code
+            AND t_con.yearly_consumpution_kWh < avg_annual_output
+) t_comb
+GROUP BY t_comb.short_code , t_comb.dim_household_size_key , t_comb.yearly_consumpution_kWh, t_comb.climate_zone, t_comb.swimming_pool_ind
+;
+"
+
+sql_sys_cost <- "SELECT 
+    t1.system_size,
+    t1.number_of_panels,
+    ROUND(AVG(t1.min_cost + t1.max_cost), 2) AS mean_cost
+FROM
+    dim_solar_sys_cost t1
+GROUP BY t1.system_size , t1.number_of_panels;
+"
+
 # get annual data across AUS in each state
 df_annual_installers <- db_query(db_connection, query_sql = sql_annual_installers)
 
@@ -90,6 +181,12 @@ df_annual_capacity <- db_query(db_connection, query_sql = sql_annual_capacity)
 df_annual_installations <- db_query(db_connection, query_sql = sql_annual_installations)
 
 df_city_sys_costs <- db_query(db_connection, query_sql = sql_state_city_sys_cost)
+
+df_household_consumption <- db_query(db_connection, query_sql = sql_household_consumption)
+
+df_consumption_vs_output <- db_query(db_connection, query_sql = sql_consumption_vs_output)
+
+df_sys_cost <- db_query(db_connection, query_sql = sql_sys_cost)
 
 db_disconnect(db_connection)
 ```
@@ -137,8 +234,200 @@ ggplot(df_annual_installations_2, aes(x = year, y = annual_installation)) +
   xlab("") +
   ylab("Number of solar PV systems installed annually (‘000)")
 
-```
-```{r}
 
-# plot output and price
+```
+
+```{r}
+y_max <- df_annual_installations %>%
+  filter(year == '2011') %>%
+  summarise(sum(number_of_installation)) %>%
+  as.numeric()
+  
+ggplot(df_annual_installations, aes(x=year, y=number_of_installation, fill=short_code)) + 
+  geom_area(alpha=0.6 , size=0.5, colour="black") +
+  # theme_bw(base_family = "Times") +
+   scale_fill_discrete(name="State") +
+  scale_y_continuous(expand = expansion(mult = c(0, .1)), limits = c(0, y_max), labels = scales::comma) +
+  scale_x_continuous(name="Year", breaks=seq(2010,2019,1)) +
+  ggtitle("Annual Solar PV Installations Across Each State") +
+  xlab("") +
+  ylab("Number of solar PV systems installed annually")
+
+```
+
+```{r}
+ggplot(data=df_household_consumption, aes(x=dim_household_size_key,y=yearly_consumpution_kWh)) +
+  geom_boxplot(aes(fill=household_size)) +
+  scale_fill_discrete(name="Household Size",
+                      labels=c("1 Person","2 Person","3 Person","4 Person","5+ Person")) +
+  # theme_bw(base_family = "Times") +
+  ggtitle("Household Annual Electricity Consumption") +
+  xlab("Household Size") +
+  ylab("Annual Consumption[/kWh]")
+
+ggplot(data=df_household_consumption, aes(x=dim_household_size_key, y=yearly_consumpution_kWh)) + 
+  geom_point() + 
+  geom_smooth(method='lm', se = FALSE)
+
+```
+
+
+```{r}
+check_state_col <- function(data_list) {
+  for (i in 1:nrow(data_list)) {
+    grape_wine_type <- data_list[i, 'short_code']
+    wine_type <- ''
+    if (grape_wine_type == 'ACT') {
+      state_col <- 'blue'
+    } else if (grape_wine_type == 'NSW') {
+      state_col <- 'red'
+    } else if (grape_wine_type == 'QLD ') {
+      state_col <- 'green'
+    } else if (grape_wine_type == 'VIC') {
+      state_col <- 'red'
+    } else if (grape_wine_type == 'NT') {
+      state_col <- 'white'
+    } else if (grape_wine_type == 'WA') {
+      state_col <- 'black'
+    } else if (grape_wine_type == 'SA') {
+      state_col <- 'pink'
+    } else if (grape_wine_type == 'TAS') {
+      state_col <- 'yellow'
+    }
+    data_list[i, 'state_col'] <- state_col
+  }
+  return (data_list)
+}
+```
+
+```{r}
+# plot consumption and output -> size of system and number of panels recommendation
+df_consumption_vs_output_2 <- df_consumption_vs_output %>%
+  # filter(short_code == "ACT") %>%
+  dplyr::group_by(short_code, household_size, swimming_pool_ind) %>%
+  dplyr::summarise(mean_annual_consumpution_kWh = mean(yearly_consumpution_kWh),
+            mean_min_system_size = mean(min_system_size),
+            mean_min_avg_annual_output = mean(min_avg_annual_output))
+
+p1 <- ggplot(data=df_consumption_vs_output_2 %>% filter(short_code == "ACT"),
+       aes(x=mean_annual_consumpution_kWh, y=mean_min_system_size,
+           size=mean_min_avg_annual_output,color = household_size, shape=swimming_pool_ind)
+       ) +
+  geom_point(alpha = 0.5) +
+  scale_color_brewer(palette = "Accent") +
+  scale_size(range = c(.1, 24), name="Average Annual Output") +
+  scale_shape_manual(values = c(16, 18)) +
+  scale_fill_viridis(discrete=TRUE, guide=FALSE, option="A") +
+  theme(legend.position="none") +
+  ylab("System Size") +
+  xlab("Annual Consumpution[/Kwh]")
+
+p2 <- ggplot(data=df_consumption_vs_output_2 %>% filter(short_code == "NSW"),
+       aes(x=mean_annual_consumpution_kWh, y=mean_min_system_size,
+           size=mean_min_avg_annual_output,color = household_size, shape=swimming_pool_ind)
+       ) +
+  geom_point(alpha = 0.5) +
+  scale_color_brewer(palette = "Accent") +
+  scale_size(range = c(.1, 24), name="Average Annual Output") +
+  scale_shape_manual(values = c(16, 18)) +
+  scale_fill_viridis(discrete=TRUE, guide=FALSE, option="A") +
+  theme(legend.position="none") +
+  ylab("System Size") +
+  xlab("Annual Consumpution[/Kwh]")
+
+p3 <- ggplot(data=df_consumption_vs_output_2 %>% filter(short_code == "VIC"),
+       aes(x=mean_annual_consumpution_kWh, y=mean_min_system_size,
+           size=mean_min_avg_annual_output,color = household_size, shape=swimming_pool_ind)
+       ) +
+  geom_point(alpha = 0.5) +
+  scale_color_brewer(palette = "Accent") +
+  scale_size(range = c(.1, 24), name="Average Annual Output") +
+  scale_shape_manual(values = c(16, 18)) +
+  scale_fill_viridis(discrete=TRUE, guide=FALSE, option="A") +
+  theme(legend.position="none") +
+  ylab("System Size") +
+  xlab("Annual Consumpution[/Kwh]")
+
+p4 <- ggplot(data=df_consumption_vs_output_2 %>% filter(short_code == "QLD"),
+       aes(x=mean_annual_consumpution_kWh, y=mean_min_system_size,
+           size=mean_min_avg_annual_output,color = household_size, shape=swimming_pool_ind)
+       ) +
+  geom_point(alpha = 0.5) +
+  scale_color_brewer(palette = "Accent") +
+  scale_size(range = c(.1, 24), name="Average Annual Output") +
+  scale_shape_manual(values = c(16, 18, 17)) +
+  scale_fill_viridis(discrete=TRUE, guide=FALSE, option="A") +
+  theme(legend.position="none") +
+  ylab("System Size") +
+  xlab("Annual Consumpution[/Kwh]")
+
+library(Rmisc)
+multiplot(p1, p2, p3, p4, cols=2)
+
+# ----------------------------------------------------------------------------------------
+# library(ggrepel)
+df_consumption_vs_output_3 <- df_consumption_vs_output_2
+df_consumption_vs_output_3$short_code <- factor(df_consumption_vs_output_3$short_code)
+
+ggplot(data=df_consumption_vs_output_3,
+       aes(x=mean_annual_consumpution_kWh, y=mean_min_system_size,
+           size=mean_min_avg_annual_output, color=household_size, shape=swimming_pool_ind)
+       ) +
+  geom_point(alpha = 0.5) +
+  geom_point(aes(color = household_size), size = 1,  alpha = 1) +
+  # geom_text(aes(label = mean_min_system_size, vjust = 1.1, hjust = -0.5, angle = 45), size = 2) +
+  facet_grid(short_code~.) +
+  scale_color_brewer(palette = "Accent", name="Household Size") +
+  scale_size(range = c(.1, 24), name="Average Annual\nOutput [kWh]") +
+  # scale_shape_manual(values = c(0, 10, 12)) +
+  scale_shape_manual(values=c(16, 18, 15), name="Whether Owning\nSwimming Pool") +
+  # scale_shape_manual(values = c(21, 23, 22)) +
+  scale_fill_viridis(discrete=TRUE, guide=FALSE, option="A") +
+  # theme(legend.position="bottom") +
+  # geom_text_repel(aes(label = mean_min_system_size)) +
+  #  theme_classic(base_size = 16) +
+  ylab("System Size [kW]") +
+  xlab("Annual Consumpution [kWh]")
+
+# ------------------------------------------------------------------------------------
+
+df_consumption_vs_output_3_BK <- df_consumption_vs_output %>%
+  filter(short_code == "NSW" | short_code == "VIC") %>%
+  # filter(swimming_pool_ind == "N") %>%
+  dplyr::group_by(short_code, household_size) %>%
+  dplyr::summarise(mean_annual_consumpution_kWh = mean(yearly_consumpution_kWh),
+                   mean_min_system_size = mean(min_system_size),
+                   mean_min_avg_annual_output = mean(min_avg_annual_output))
+
+df_consumption_vs_output_3_BK %>%
+ggplot(aes(x=mean_annual_consumpution_kWh, y=mean_min_system_size,color=household_size)) +
+  geom_point(alpha = 0.5, size = 10) +
+  # geom_point(aes(color = household_size), size = 1,  alpha = 1) +
+  geom_text(aes(label = scales::comma(mean_min_avg_annual_output),angle = 15), size = 2, colour = "black") +
+  facet_grid(short_code~., scales = "free_x") +
+  scale_color_brewer(palette = "Accent", name="Household Size", labels = c("1 Person", "2 Person", "3 Person", "4 Person", "5+ Person")) +
+  # scale_size(range = c(.1, 24), name="Average Annual Output [kWh]") +
+  scale_fill_viridis(discrete=TRUE, guide=FALSE, option="A") +
+  theme(legend.position="right", legend.box = "", legend.key.size = unit(6, 'mm'), legend.key = element_blank()) +
+  ylab("System Size [kW]") +
+  xlab("Annual Consumpution [kWh]")
+
+
+```
+  
+```{r}
+# plot number of panels - cost - system_size
+ggplot(data=df_sys_cost, aes(x=number_of_panels, y=system_size)) +
+  # geom_smooth(method = "lm", se = FALSE) +
+  geom_point(aes(size=mean_cost, color = mean_cost), alpha = 0.5) +
+  geom_text(aes(label = scales::dollar(mean_cost), vjust = 0.3, hjust = -0.5), size = 3) +
+  scale_size(range = c(1, 10), name="Solar Panel\nMean Cost [AU$]", labels = scales::dollar) +
+  scale_color_continuous(guide=FALSE) +
+  scale_fill_viridis(discrete=TRUE, guide=FALSE, option="A") +
+  scale_x_continuous(limits = c(5, 40)) +
+  scale_y_continuous(limits = c(0, 10)) +
+  theme(legend.position="none") +
+  theme_bw(base_family = "Times") +
+  ylab("System Size [kW]") +
+  xlab("Number of Pannels")
 ```
