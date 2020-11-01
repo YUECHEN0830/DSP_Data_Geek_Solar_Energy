@@ -411,12 +411,7 @@ ggplot(aes(x=mean_annual_consumpution_kWh, y=mean_min_system_size,color=househol
   theme(legend.position="right", legend.box = "", legend.key.size = unit(6, 'mm'), legend.key = element_blank()) +
   ylab("System Size [kW]") +
   xlab("Annual Consumpution [kWh]")
-# 
-# df_consumption_vs_output_3_BK %>%
-# ggplot(aes(x = household_size, y = yearly_consumpution_kWh, fill=short_code))+
-#   geom_bar(stat="identity",position=position_dodge(0.75))
-# 
-# df_consumption_vs_output_3_BK %>%
+
 
 ```
   
@@ -435,15 +430,4 @@ ggplot(data=df_sys_cost, aes(x=number_of_panels, y=system_size)) +
   theme_bw(base_family = "Times") +
   ylab("System Size [kW]") +
   xlab("Number of Pannels")
-```
-
-```{r}
-df_consumption_vs_output_2_BK <- df_consumption_vs_output %>%
-  # filter(short_code == "ACT") %>%
-  dplyr::group_by(short_code, household_size, swimming_pool_ind) %>%
-  dplyr::summarise(mean_annual_consumpution_kWh = yearly_consumpution_kWh,
-            mean_min_system_size = min_system_size,
-            mean_min_avg_annual_output = min_avg_annual_output)
-
-View(df_consumption_vs_output_2_BK)
 ```
