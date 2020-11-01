@@ -2,7 +2,17 @@
 .Rhistory
 .RData
 .Ruserdata
+
+.html
+# Hidden File in the Apple MacOS Operating System
 .DS_Store
 
+# Specific Files:
+# Database Configuration File
 /code/config/db_connection_config.csv
+
+# HTML File Converted from R Markdown
+code/src/annual_Scenario_1.html
+code/src/rpt_Scenario_1.html
+
 data/data.gov.au

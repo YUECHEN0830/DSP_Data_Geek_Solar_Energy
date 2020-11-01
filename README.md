@@ -40,7 +40,11 @@ this is shorthand for:
 - `git checkout <branch_name>`                  --> To switch branch
 - `git branch -d <branch_name>`                 --> To delete branch
 
+- `git push origin <branch_name>`               --> To push a branch to the remote repository -- here is 'origin'; the command always been used when you want to create a new branch
+- `git push -u origin <branch_name>`            --> Using "-u" option for upstream
+
 Merge:  
+- `git merge <branch_name>`
 - `git merge –-no-ff <branch_name>`             --> To merge <branch_name> (this) to your current branch  
 Undo a merge:  
 - `git reset --hard <commit-before-merge>`      --> <commit-before-merge> == the hash of commit  
