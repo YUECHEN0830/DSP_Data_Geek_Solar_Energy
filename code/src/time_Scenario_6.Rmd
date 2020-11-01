@@ -1,22 +1,11 @@
 ---
   title: "DSP AT2 - Scenario 6"
-output:
+  output:
   html_document:
   df_print: paged
 ---
   
-  Dashboard for scenario #1
-* Scenario
-* - state: NSW
-* - Climate Zone: 4
-* - household size: 4
-* - swimming pool: N
-* 
-  * Output
-* - spring_kWh
-* - summer_kWh
-* - autumn_kWh
-* - winter_kWh
+  
 
 ```{R, echo=TRUE, warning=FALSE, message=FALSE}
 
@@ -30,7 +19,7 @@ library(dplyr)
 library(ggplot2)
 library(ggthemes)
 library(lubridate)
-library(lattice)
+
 
 
 ```
@@ -41,50 +30,30 @@ library(lattice)
 config <- read.csv(here("code/config", "db_connection_config.csv")) %>% filter(user_key == "rato_rds")
 db_connection <- db_connect(config)
 
-# spl latitude whether station
-
-sql_latitude_whether_station <- "SELECT
-     dws.latitude
-    ,dws.longitude
-    ,f.dim_date_key
-    ,f.daily_exposure
-    ,dws.station_name
-FROM 
-    fct_daily_solar_exposure as f
-LEFT JOIN 
-    dim_weather_station as dws on dws.dim_weather_station_key = f.dim_weather_station_key;"
-
-
-# sql average solar exposure
-
-sql_average_solar_exposure <- "SELECT
-    dws.latitude,
-    dws.longitude,
-    AVG(f.daily_exposure) AS avg_daily_exposure,
-    dws.station_name
-FROM
-    fct_daily_solar_exposure AS f
-LEFT JOIN
-    dim_weather_station AS dws ON dws.dim_weather_station_key = f.dim_weather_station_key
-GROUP BY 
-    dws.latitude , dws.longitude , dws.station_name;"
-
  
 # sql solar exposure
 
-sql_solar_exposure <- "select
-    STR_TO_DATE(CAST(f.dim_date_key as CHAR), '%Y%m%d') as solar_date
-    ,dws.station_number 
-    ,dws.station_name 
+sql_solar_exposure <- "SELECT
+    STR_TO_DATE(CAST(f.dim_date_key as CHAR), '%Y%m%d') AS solar_date
+    ,w.station_number 
+    ,w.station_name 
     ,f.daily_exposure 
+    ,t.min_temperature 
+    ,t.max_temperature
+
 FROM 
-    fct_daily_solar_exposure as f
+    fct_daily_solar_exposure AS f
+LEFT JOIN    
+    dim_weather_station AS w ON w.dim_weather_station_key = f.dim_weather_station_key
 LEFT JOIN 
-    dim_weather_station as dws on dws.dim_weather_station_key = f.dim_weather_station_key 
+    fct_daily_temperature AS t ON t.dim_weather_station_key = f.dim_weather_station_key
+    AND
+    t.dim_date_key = f.dim_date_key
+
 WHERE 1=1
-    AND dws.dim_weather_station_key is not null
+    AND w.dim_weather_station_key is not null
     AND f.dim_date_key BETWEEN 20180101 and 20191231
-    AND dws.station_number = '066062'
+    AND w.station_number = '066062'
 ;
 "
 
@@ -136,8 +105,7 @@ FROM
 
 # get Data from AWS 
 
-df_latitude_whether_station <- db_query(db_connection, query_sql = sql_latitude_whether_station)
-df_average_solar_exposure <- db_query(db_connection, query_sql = sql_average_solar_exposure)
+
 df_solar_exposure <- db_query(db_connection, query_sql = sql_solar_exposure)
 df_yearly_lga_solar <- db_query(db_connection, query_sql = sql_yearly_lga_solar)
 df_solar_pv_sys_output <- db_query(db_connection, query_sql = fct_solar_pv_sys_output)
@@ -167,8 +135,8 @@ solar_syd <- df_solar_exposure %>%
              mutate(month = month(solar_date)) %>% 
              mutate(`daily_exposure` = as.numeric(`daily_exposure`)) %>%
              mutate(`daily_exposure` = `daily_exposure`/3.6) %>%
-             mutate(output_kWh8 = ((daily_exposure * df_dim_solar_panel[8,2] ) / 1000) * (1 / 1.636) * (1 - 0.25)) %>%     # JKM400N-72H-TV
-             mutate(output_kWh13 = ((daily_exposure * df_dim_solar_panel[13,2] ) / 1000) * (1 / 1.636) * (1 - 0.25))       # LG335N1K-V5
+             mutate(output_kWh8 = ((daily_exposure * df_dim_solar_panel[8,2] ) / 1000) * (1 / 1.636) * (1 - df_dim_solar_panel[8,3]/100 - (df_dim_solar_panel[8,4]/100 * (max_temperature + 30 - 25)))) %>%     # JKM400N-72H-TV
+             mutate(output_kWh13 = ((daily_exposure * df_dim_solar_panel[13,2] ) / 1000) * (1 / 1.636) * (1 - df_dim_solar_panel[13,3]/100 - (df_dim_solar_panel[13,4]/100 * (max_temperature + 30 - 25))))       # LG335N1K-V5
 
 glimpse(solar_syd)
 
@@ -200,6 +168,7 @@ df_yearly_lga_solar <- df_yearly_lga_solar %>%
 
 
 
+
 ```
 
 
@@ -209,10 +178,10 @@ df_yearly_lga_solar <- df_yearly_lga_solar %>%
 
 
 ggplot(solar_syd) +
-  geom_smooth(aes(x = solar_date, y = daily_exposure), colour = 'orange') +
-  annotate("text", x=solar_syd$solar_date[350], y = 6.5, label = "BOM Station SYDNEY (OBSERVATORY HILL)", colour ="orange") +
+  # geom_smooth(aes(x = solar_date, y = daily_exposure), colour = 'orange') +
+  # annotate("text", x=solar_syd$solar_date[350], y = 6.5, label = "BOM Station SYDNEY (OBSERVATORY HILL)", colour ="orange") +
   geom_smooth(aes(x = solar_date, y = output_kWh8), colour = 'green') +
-  annotate("text", x=solar_syd$solar_date[350], y = 1.5, label = "Module (JKM400N-72H-TV)", colour ="green") +
+  annotate("text", x=solar_syd$solar_date[350], y = 1.3, label = "Module (JKM400N-72H-TV)", colour ="green") +
   geom_smooth(aes(x = solar_date, y = output_kWh13), colour = 'blue') +
   annotate("text", x=solar_syd$solar_date[350], y = 0.4, label = "Module (LG335N1K-V5)", colour ="blue") +
   labs(title = "Daily Comparison Radiation vs. PV Output",
@@ -268,9 +237,9 @@ solar_syd_mean19 <- solar_syd_mean %>% mutate(`output_kWh_mean` = `output_kWh_me
 df_yearly_lga_solar19 <- df_yearly_lga_solar %>% filter(year == 2019)
 
   ggplot(solar_syd_m19) +
-      geom_smooth(aes(x = month, y =  output_kWh_m)) +
+      geom_line(aes(x = month, y =  output_kWh_m)) +
       geom_abline(slope = 0, intercept = (df_yearly_lga_solar19$daily_average * 365 / (12 * 1.636)), colour = "orange") +
-      annotate("text", x = 6, y = 200, label = "Average per Customer and Day (AGL)", colour ="orange") +
+      annotate("text", x = 6, y = 200, label = "Average per Customer and Month (AGL)", colour ="orange") +
       geom_abline(slope = 0, intercept = (solar_syd_mean19$output_kWh_mean * 365 / 12), colour ="green") +
       annotate("text", x = 6, y = 165, label = "Mean for 6 Modules (JKM400N-72H-TV)", colour ="green") +
       labs(title = "Total Monthly kWh 2019",
@@ -284,7 +253,23 @@ df_yearly_lga_solar19 <- df_yearly_lga_solar %>% filter(year == 2019)
 ```
 
 
+```{R, echo=TRUE, warning=FALSE, message=FALSE}
 
+# plot Annual Accredited Installers In Each State
+
+
+ggplot(solar_syd) +
+  geom_smooth(aes(x = solar_date, y = output_kWh8), colour = 'green', se = FALSE) +
+  annotate("text", x=solar_syd$solar_date[350], y = 1.05, label = "Module (JKM400N-72H-TV)", colour ="green") +
+  geom_smooth(aes(x = solar_date, y = output_kWh13), colour = 'blue', se = FALSE) +
+  annotate("text", x=solar_syd$solar_date[350], y = 0.55, label = "Module (LG335N1K-V5)", colour ="blue") +
+  labs(title = "Comparison JKM400N-72H-TV vs. LG335N1K-V5",
+      subtitle = "BOM Station SYDNEY (OBSERVATORY HILL)",
+      y = "kWh/m2",
+      x = "Date") + 
+      theme_bw(base_family = "Times")
+  
+```
 
 
 
