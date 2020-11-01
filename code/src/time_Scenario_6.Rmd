@@ -30,6 +30,7 @@ library(dplyr)
 library(ggplot2)
 library(ggthemes)
 library(lubridate)
+library(lattice)
 
 
 ```
@@ -166,7 +167,8 @@ solar_syd <- df_solar_exposure %>%
              mutate(month = month(solar_date)) %>% 
              mutate(`daily_exposure` = as.numeric(`daily_exposure`)) %>%
              mutate(`daily_exposure` = `daily_exposure`/3.6) %>%
-             mutate(output_kWh = ((daily_exposure * df_dim_solar_panel[8,2] ) / 1000) * (1 / 1.636) * (1 - 0.25))
+             mutate(output_kWh8 = ((daily_exposure * df_dim_solar_panel[8,2] ) / 1000) * (1 / 1.636) * (1 - 0.25)) %>%     # JKM400N-72H-TV
+             mutate(output_kWh13 = ((daily_exposure * df_dim_solar_panel[13,2] ) / 1000) * (1 / 1.636) * (1 - 0.25))       # LG335N1K-V5
 
 glimpse(solar_syd)
 
@@ -186,12 +188,12 @@ glimpse(df_dim_solar_panel)
 
 solar_syd_m <- solar_syd %>% 
                group_by(month, year) %>%
-               summarise(output_kWh_m = sum(output_kWh))
+               summarise(output_kWh_m = sum(output_kWh8))
 
 
 solar_syd_mean <- solar_syd %>% 
                   group_by(year) %>%
-                  summarise(output_kWh_mean = mean(output_kWh))
+                  summarise(output_kWh_mean = mean(output_kWh8))
 
 df_yearly_lga_solar <- df_yearly_lga_solar %>% 
                        filter(local_government_area == 'SYDNEY')
@@ -208,10 +210,16 @@ df_yearly_lga_solar <- df_yearly_lga_solar %>%
 
 ggplot(solar_syd) +
   geom_smooth(aes(x = solar_date, y = daily_exposure), colour = 'orange') +
-  geom_smooth(aes(x = solar_date, y = output_kWh), colour = 'green') +
-  theme_bw(base_family = "Times") +
-  labs(x = "Date", y = "kWh/m2") +
-  labs(title = "Solar Exposure")
+  annotate("text", x=solar_syd$solar_date[350], y = 6.5, label = "BOM Station SYDNEY (OBSERVATORY HILL)", colour ="orange") +
+  geom_smooth(aes(x = solar_date, y = output_kWh8), colour = 'green') +
+  annotate("text", x=solar_syd$solar_date[350], y = 1.5, label = "Module (JKM400N-72H-TV)", colour ="green") +
+  geom_smooth(aes(x = solar_date, y = output_kWh13), colour = 'blue') +
+  annotate("text", x=solar_syd$solar_date[350], y = 0.4, label = "Module (LG335N1K-V5)", colour ="blue") +
+  labs(title = "Daily Comparison Radiation vs. PV Output",
+      subtitle = "BOM Station SYDNEY (OBSERVATORY HILL)",
+      y = "kWh/m2",
+      x = "Date") + 
+      theme_bw(base_family = "Times")
   
 ```
 
@@ -255,18 +263,19 @@ ggplot(solar_syd) +
 
 # plot Annual Accredited Installers In Each State
 
-solar_syd_m19 <- solar_syd_m %>% filter(year == 2019)
-solar_syd_mean19 <- solar_syd_mean %>% filter(year == 2019)
+solar_syd_m19 <- solar_syd_m %>% mutate(`output_kWh_m` = `output_kWh_m` * 6) %>% filter(year == 2019)
+solar_syd_mean19 <- solar_syd_mean %>% mutate(`output_kWh_mean` = `output_kWh_mean` * 6) %>% filter(year == 2019)
 df_yearly_lga_solar19 <- df_yearly_lga_solar %>% filter(year == 2019)
 
   ggplot(solar_syd_m19) +
       geom_smooth(aes(x = month, y =  output_kWh_m)) +
-      geom_abline(slope = 0, intercept = (df_yearly_lga_solar19$daily_average * 365 / 12), colour = "orange") +
-      annotate()
+      geom_abline(slope = 0, intercept = (df_yearly_lga_solar19$daily_average * 365 / (12 * 1.636)), colour = "orange") +
+      annotate("text", x = 6, y = 200, label = "Average per Customer and Day (AGL)", colour ="orange") +
       geom_abline(slope = 0, intercept = (solar_syd_mean19$output_kWh_mean * 365 / 12), colour ="green") +
-      labs(title = "Total Monthly kWh estimated",
-      subtitle = "Data plotted by year",
-      y = "kWh/m2",
+      annotate("text", x = 6, y = 165, label = "Mean for 6 Modules (JKM400N-72H-TV)", colour ="green") +
+      labs(title = "Total Monthly kWh 2019",
+      subtitle = "Comparison theoretical and AGL Data",
+      y = "kWh",
       x = "Month") + 
       theme_bw(base_family = "Times")
   
