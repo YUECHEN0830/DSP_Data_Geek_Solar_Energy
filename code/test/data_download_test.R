@@ -1,5 +1,6 @@
 library(here)
-source(here::here("code/src", "bom_solar_data_download.R"))
+# source(here::here("code/test", "bom_solar_data_download.R"))
+source(here::here("code/common", "bom_data_download.R"))
 
 print_test(2)
 

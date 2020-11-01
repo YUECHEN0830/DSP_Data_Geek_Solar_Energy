@@ -1,6 +1,6 @@
 library(rvest)
 library(here)
-source(here::here("code/src", "bom_solar_data_download.R"))
+source(here::here("code/common", "bom_data_download.R"))
 
 
 
