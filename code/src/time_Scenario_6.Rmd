@@ -136,7 +136,7 @@ solar_syd <- df_solar_exposure %>%
              mutate(`daily_exposure` = as.numeric(`daily_exposure`)) %>%
              mutate(`daily_exposure` = `daily_exposure`/3.6) %>%
              mutate(output_kWh8 = ((daily_exposure * df_dim_solar_panel[8,2] ) / 1000) * (1 / 1.636) * (1 - df_dim_solar_panel[8,3]/100 - (df_dim_solar_panel[8,4]/100 * (max_temperature + 30 - 25)))) %>%     # JKM400N-72H-TV
-             mutate(output_kWh13 = ((daily_exposure * df_dim_solar_panel[13,2] ) / 1000) * (1 / 1.636) * (1 - df_dim_solar_panel[8,3]/100 - (df_dim_solar_panel[8,4]/100 * (max_temperature + 30 - 25))))       # LG335N1K-V5
+             mutate(output_kWh13 = ((daily_exposure * df_dim_solar_panel[13,2] ) / 1000) * (1 / 1.636) * (1 - df_dim_solar_panel[13,3]/100 - (df_dim_solar_panel[13,4]/100 * (max_temperature + 30 - 25))))       # LG335N1K-V5
 
 glimpse(solar_syd)
 
@@ -178,8 +178,8 @@ df_yearly_lga_solar <- df_yearly_lga_solar %>%
 
 
 ggplot(solar_syd) +
-  geom_smooth(aes(x = solar_date, y = daily_exposure), colour = 'orange') +
-  annotate("text", x=solar_syd$solar_date[350], y = 6.5, label = "BOM Station SYDNEY (OBSERVATORY HILL)", colour ="orange") +
+  # geom_smooth(aes(x = solar_date, y = daily_exposure), colour = 'orange') +
+  # annotate("text", x=solar_syd$solar_date[350], y = 6.5, label = "BOM Station SYDNEY (OBSERVATORY HILL)", colour ="orange") +
   geom_smooth(aes(x = solar_date, y = output_kWh8), colour = 'green') +
   annotate("text", x=solar_syd$solar_date[350], y = 1.3, label = "Module (JKM400N-72H-TV)", colour ="green") +
   geom_smooth(aes(x = solar_date, y = output_kWh13), colour = 'blue') +
@@ -253,7 +253,23 @@ df_yearly_lga_solar19 <- df_yearly_lga_solar %>% filter(year == 2019)
 ```
 
 
+```{R, echo=TRUE, warning=FALSE, message=FALSE}
 
+# plot Annual Accredited Installers In Each State
+
+
+ggplot(solar_syd) +
+  geom_smooth(aes(x = solar_date, y = output_kWh8), colour = 'green', se = FALSE) +
+  annotate("text", x=solar_syd$solar_date[350], y = 1.05, label = "Module (JKM400N-72H-TV)", colour ="green") +
+  geom_smooth(aes(x = solar_date, y = output_kWh13), colour = 'blue', se = FALSE) +
+  annotate("text", x=solar_syd$solar_date[350], y = 0.55, label = "Module (LG335N1K-V5)", colour ="blue") +
+  labs(title = "Comparison JKM400N-72H-TV vs. LG335N1K-V5",
+      subtitle = "BOM Station SYDNEY (OBSERVATORY HILL)",
+      y = "kWh/m2",
+      x = "Date") + 
+      theme_bw(base_family = "Times")
+  
+```
 
 
 
