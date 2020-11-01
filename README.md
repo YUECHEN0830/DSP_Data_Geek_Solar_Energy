@@ -26,6 +26,8 @@
 - `git rm -f <file_name>`                       --> To delete a file  
 - `git reset <file or directory name>`                    --> To remove a file from the staging area
 - `git push`                                    --> To send local commits to the remote   repository (Note: please make sure not submit files that would make the whole project breakdown !!!)
+- `git log`                                     --> To show the commit logs (e.g. commit 41972ebd3041447fe43877573XXXXXXXXXXXX)
+- `git reset --hard <commit version>`           --> To revert to a specific version (need use `git push -f -u origin <branch name>` to push codes back to Github)
 
 ## Git Commands Related to Branch Management
 Basic branching:  
@@ -38,7 +40,11 @@ this is shorthand for:
 - `git checkout <branch_name>`                  --> To switch branch
 - `git branch -d <branch_name>`                 --> To delete branch
 
+- `git push origin <branch_name>`               --> To push a branch to the remote repository -- here is 'origin'; the command always been used when you want to create a new branch
+- `git push -u origin <branch_name>`            --> Using "-u" option for upstream
+
 Merge:  
+- `git merge <branch_name>`
 - `git merge –-no-ff <branch_name>`             --> To merge <branch_name> (this) to your current branch  
 Undo a merge:  
 - `git reset --hard <commit-before-merge>`      --> <commit-before-merge> == the hash of commit  

@@ -15,18 +15,49 @@ https://api.solcast.com.au/world_radiation/estimated_actuals?latitude=-33.86882&
 ```{r}
 library(httr)
 library(jsonlite)
+library(here)
+
+lat <- -33.86882
+long <- 151.209295
+tf <- here("data\\solcast", format(Sys.time(), paste("Radiation_",lat,'_',long,"_%Y%m%d-%H%M%S.json",sep='')))
 
 result <- GET("https://api.solcast.com.au/world_radiation/estimated_actuals"
               , query = list(
-                api_key="???"
-                ,latitude=-33.86882
-                ,longitude=151.209295
+                api_key=Sys.getenv("solcast")
+                ,latitude=lat
+                ,longitude=long
+                # ,latitude=-4.9267
+                # ,longitude=51.9711
                 ,hours=168
                 ,format="json")
-              , write_disk(tf <- tempfile(fileext = ".json"))
+              , write_disk(tf)
 )
 
-result
+ds_solcast <- jsonlite::fromJSON(tf, simplifyVector = TRUE)
+df_solcast <- ds_solcast$"estimated_actuals"
+
+```
+
+```{r}
+tf <- here("data\\solcast", format(Sys.time(), "PV_Power_%Y%m%d-%H%M%S.json"))
+
+result <- GET("https://api.solcast.com.au/world_pv_power/estimated_actuals"
+              , query = list(
+                api_key=Sys.getenv("solcast")
+                ,latitude=-33.86882
+                ,longitude=151.209295
+                # ,latitude=-4.9267
+                # ,longitude=51.9711
+                ,capacity=5
+                ,tilt=30
+                ,azimuth=0
+                ,hours=168
+                ,format="json")
+              , write_disk(tf, overwrite =FALSE)
+)
+
+ds_pv_power <- jsonlite::fromJSON(tf, simplifyVector = TRUE)
+df_pv_power <- ds_pv_power$"estimated_actuals"
 ```
 
 ## Including Plots
@@ -34,7 +65,14 @@ result
 You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
-plot(pressure)
+library(rgdal)
+
+# load shapefile
+land_use <- readOGR(dsn  = here("data\\data.gov.au\\ASGC_LGA2011\\LGA11aAust.shp"))
+# , layer = "CLUM_Commodities_2018_v2")
+
+plot(land_use)
+
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

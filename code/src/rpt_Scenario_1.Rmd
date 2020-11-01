@@ -1,0 +1,196 @@
+---
+title: "DSP AT2 - Scenario 1"
+output:
+  html_document:
+    df_print: paged
+---
+
+Dashboard for scenario #1
+ * Scenario
+ * - state: NSW
+ * - Climate Zone: 4
+ * - household size: 4
+ * - swimming pool: N
+ * 
+ * Output
+ * - spring_kWh
+ * - summer_kWh
+ * - autumn_kWh
+ * - winter_kWh
+
+```{r}
+library(readr)
+library(here)
+library(reshape2)
+library(knitr)
+source(here("code/common", "mysql_connection.R"))
+library(dplyr)
+
+# using configuration file
+config <- read.csv(here("code/config", "db_connection_config.csv"))
+myconfig <- config %>% filter(user_key == "rato_rds")
+
+db_connection <- db_connect(myconfig)
+
+sql_elec_consumption_daily <- 'SELECT
+	das.state
+	,das.short_code 
+	,dcz.climate_zone 
+	,dhs.household_size 
+	,f.fct_created_date
+	,f.swimming_pool_ind
+	,f.spring_kWh 
+	,f.summer_kWh 
+	,f.autumn_kWh 
+	,f.winter_kWh 
+FROM fct_household_electricity_consumption_benchmark as f
+left join dim_aus_state as das on das.dim_aus_state_key = f.dim_aus_state_key
+left join dim_climate_zone as dcz on dcz.dim_climate_zone_key = f.dim_climate_zone_key
+left join dim_household_size as dhs on dhs.dim_household_size_key = f.dim_household_size_key 
+where 1=1
+and das.short_code = "NSW" 
+and dcz.climate_zone = "Climate Zone 4"
+and dhs.household_size = "4 Person Household"
+and f.swimming_pool_ind = "N"
+;
+'
+
+sql_solar_exposure <- "select
+	STR_TO_DATE(CAST(f.dim_date_key as CHAR), '%Y%m%d') as solar_date
+	,dws.station_number 
+	,dws.station_number 
+	,f.daily_exposure 
+from fct_daily_solar_exposure as f
+left join dim_weather_station as dws on dws.dim_weather_station_key = f.dim_weather_station_key 
+where 1=1
+and dws.dim_weather_station_key is not null
+and f.dim_date_key BETWEEN 20200101 and 20201231
+and dws.station_number = '066062'
+;
+"
+
+sql_annual_installations <- 'with cte_annual_installations as (
+	select
+		COALESCE(faai.`year`, faic.`year` , fasi.`year` ) as `year` 
+		,COALESCE(faai.dim_aus_state_key, faic.dim_aus_state_key , fasi.dim_aus_state_key ) as dim_aus_state_key 
+		,faai.num_accredited_installers 
+		,faic.mw_installed 
+		,fasi.number_of_installation 
+	FROM fct_annual_accredited_installers as faai
+	left join dsp_test.fct_annual_installed_capacity as faic 
+		on faic.dim_aus_state_key = faai.dim_aus_state_key 
+		and faic.`year` = faai.`year` 
+	left join dsp_test.fct_annual_sys_installation as fasi
+		on fasi.dim_aus_state_key = faai.dim_aus_state_key 
+		and fasi.`year` = faai.`year` 
+	union
+	select
+		COALESCE(faai.`year`, faic.`year` , fasi.`year` ) as `year` 
+		,COALESCE(faai.dim_aus_state_key, faic.dim_aus_state_key , fasi.dim_aus_state_key ) as dim_aus_state_key 
+		,faai.num_accredited_installers 
+		,faic.mw_installed 
+		,fasi.number_of_installation 
+	FROM fct_annual_accredited_installers as faai
+	right join dsp_test.fct_annual_installed_capacity as faic 
+		on faic.dim_aus_state_key = faai.dim_aus_state_key 
+		and faic.`year` = faai.`year` 
+	left join dsp_test.fct_annual_sys_installation as fasi
+		on fasi.dim_aus_state_key = faai.dim_aus_state_key 
+		and fasi.`year` = faai.`year` 
+	union
+	select
+		COALESCE(faai.`year`, faic.`year` , fasi.`year` ) as `year` 
+		,COALESCE(faai.dim_aus_state_key, faic.dim_aus_state_key , fasi.dim_aus_state_key ) as dim_aus_state_key 
+		,faai.num_accredited_installers 
+		,faic.mw_installed 
+		,fasi.number_of_installation 
+	FROM fct_annual_accredited_installers as faai
+	right join dsp_test.fct_annual_installed_capacity as faic 
+		on faic.dim_aus_state_key = faai.dim_aus_state_key 
+		and faic.`year` = faai.`year` 
+	right join dsp_test.fct_annual_sys_installation as fasi
+		on fasi.dim_aus_state_key = faai.dim_aus_state_key 
+		and fasi.`year` = faai.`year` 
+	union
+	select
+		COALESCE(faai.`year`, faic.`year` , fasi.`year` ) as `year` 
+		,COALESCE(faai.dim_aus_state_key, faic.dim_aus_state_key , fasi.dim_aus_state_key ) as dim_aus_state_key 
+		,faai.num_accredited_installers 
+		,faic.mw_installed 
+		,fasi.number_of_installation 
+	FROM fct_annual_accredited_installers as faai
+	left join dsp_test.fct_annual_installed_capacity as faic 
+		on faic.dim_aus_state_key = faai.dim_aus_state_key 
+		and faic.`year` = faai.`year` 
+	right join dsp_test.fct_annual_sys_installation as fasi
+		on fasi.dim_aus_state_key = faai.dim_aus_state_key 
+		and fasi.`year` = faai.`year` 
+)
+,agg_annual_installations as (
+	select
+		`year` 
+		,dim_aus_state_key 
+		,sum(num_accredited_installers) as num_accredited_installers
+		,sum(mw_installed) as mw_installed 
+		,sum(number_of_installation) as number_of_installation 
+	from cte_annual_installations
+	group by
+		`year`
+		,dim_aus_state_key 
+)
+SELECT
+	ds.short_code 
+	,ds.state 
+	,faai.`year` 
+	,faai.num_accredited_installers 
+	,faai.mw_installed 
+	,faai.number_of_installation
+from agg_annual_installations faai
+left join dsp_test.dim_aus_state as ds on ds.dim_aus_state_key = faai.dim_aus_state_key 
+order by ds.state , faai.`year` 
+;
+'
+
+sql_state_city_sys_cost <- 'select
+	ds.short_code 
+	,ds.state 
+	,faai.city 
+	,dssc.system_size
+	,dssc.number_of_panels 
+	,dssc.min_cost 
+	,dssc.max_cost 
+from dsp_test.fct_solar_pv_sys_output as faai
+left join dsp_test.dim_aus_state as ds 
+	on ds.dim_aus_state_key = faai.dim_aus_state_key 
+left join dsp_test.dim_solar_sys_cost as dssc on dssc.dim_solar_sys_cost_key = faai.dim_solar_sys_cost_key 
+;
+'
+# get data
+df_daily_consumption <- db_query(db_connection, query_sql = sql_elec_consumption_daily)
+
+df_daily_solar_exposure <- db_query(db_connection, query_sql = sql_solar_exposure)
+
+df_annual_installations <- db_query(db_connection, query_sql = sql_annual_installations)
+# df_annual_installations$year <- as.factor(df_annual_installations$year)
+
+df_city_sys_costs <- db_query(db_connection, query_sql = sql_state_city_sys_cost)
+
+db_disconnect(db_connection)
+```
+
+Here we can do some plotting to showcase what we find in the data.
+```{r ann-install}
+library(ggplot2)
+
+df_annual_installations %>%
+  ggplot(aes(x = mw_installed, y = number_of_installation)) +
+  geom_point(mapping=aes(line_type = state))
+```
+
+```{r l-ann-install}
+library(ggplot2)
+
+df_annual_installations %>%
+  ggplot(aes(x = year, y = mw_installed)) +
+  geom_line(mapping=aes(line_type = state))
+```
