@@ -30,7 +30,7 @@ library(dplyr)
 library(ggplot2)
 library(ggthemes)
 library(lubridate)
-library(lattice)
+
 
 
 ```
@@ -40,19 +40,6 @@ library(lattice)
 # using configuration file
 config <- read.csv(here("code/config", "db_connection_config.csv")) %>% filter(user_key == "rato_rds")
 db_connection <- db_connect(config)
-
-# spl latitude whether station
-
-sql_latitude_whether_station <- "SELECT
-     dws.latitude
-    ,dws.longitude
-    ,f.dim_date_key
-    ,f.daily_exposure
-    ,dws.station_name
-FROM 
-    fct_daily_solar_exposure as f
-LEFT JOIN 
-    dim_weather_station as dws on dws.dim_weather_station_key = f.dim_weather_station_key;"
 
 
 # sql average solar exposure
